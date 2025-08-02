@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model Users {
   user_id    BigInt   @id @default(autoincrement())
   email      String   @unique @db.VarChar(100)
   password   String   @db.VarChar(100)
@@ -15,21 +15,24 @@ model users {
   firstname  String   @db.VarChar(100)
   lastname   String?  @db.VarChar(100)
   created_at DateTime @default(now()) @db.Timestamptz(6)
-  groups     groups[]
+  groups     Groups[]
+  @@map("users")
 }
 
-model groups {
+model Groups {
   group_id   BigInt    @id @default(autoincrement())
   group_type Int
-  fk_grouptype  grouptypes @relation(fields: [group_type], references: [group_type_id])
+  fk_grouptype  GroupTypes @relation(fields: [group_type], references: [group_type_id])
   group_name String    @unique @db.VarChar(100)
   created_by BigInt
-  fk_user       users     @relation(fields: [created_by], references: [user_id])
+  fk_user       Users     @relation(fields: [created_by], references: [user_id])
   created_at DateTime  @default(now()) @db.Timestamptz(6)
+  @@map("groups")
 }
 
-model grouptypes {
+model GroupTypes {
   group_type_id   Int      @id @default(autoincrement())
   group_type_name String   @unique @db.VarChar(100)
-  groups          groups[]
+  groups          Groups[]
+  @@map("group_types")
 }

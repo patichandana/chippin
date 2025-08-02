@@ -3,7 +3,7 @@
     "strict": false,
     "module": "NodeNext",
     "rootDir": "./",
-    "target": "ES2020",
+    "target": "ES2022",
     "esModuleInterop": true,
     "moduleResolution": "NodeNext",
     "sourceMap": true,
