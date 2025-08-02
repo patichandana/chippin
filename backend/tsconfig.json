@@ -2,14 +2,14 @@
   "compilerOptions": {
     "strict": false,
     "module": "NodeNext",
-    "rootDir": "./src",
-    "target": "ES2020",
+    "rootDir": "./",
+    "target": "ES2022",
     "esModuleInterop": true,
     "moduleResolution": "NodeNext",
     "sourceMap": true,
     "outDir": "dist",
     "noEmit": false,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "prisma/**/*"],
   "lib": ["es2015"]
 }
