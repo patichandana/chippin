@@ -28,6 +28,6 @@ export const loginUserSchema = zod.object({
 
 export const jwtTokenUserSchema = zod.object({
     email: zod.string().email(),
-    userId: zod.number(),
+    userId: zod.string(),
     username: zod.string()
 });

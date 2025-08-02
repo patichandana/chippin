@@ -15,7 +15,7 @@ app.post('/signup', signup);
 app.post('/login', login);
 
 app.use((req, res, next) => {
-    const userId = authenticateRequest(req, res);
+    const userId = Number(authenticateRequest(req, res));
 
     if (userId != -1) {
         // req.userId = userId;
