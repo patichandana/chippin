@@ -18,6 +18,8 @@ model Users {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
   groups     Groups[]
+  expenses   Expenses[]
+  expense_shares ExpenseShares[]
   @@map("users")
 }
 
@@ -31,6 +33,7 @@ model Groups {
   status Status @default(ACTIVE)
   created_at DateTime  @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
+  expenses Expenses[]
   @@map("groups")
 }
 
@@ -53,4 +56,33 @@ model Currencies {
 enum Status {
   ACTIVE
   DELETED
+}
+
+model Expenses {
+  expense_id BigInt   @id @default(autoincrement())
+  expense_name String @db.VarChar(200)
+  expense_status String @db.VarChar(20)
+  group_id BigInt
+  fk_group Groups @relation(fields:[group_id], references: [group_id])
+  //add relation here
+  amount Int
+  currency_id Int
+  //add relation here
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  expense_date DateTime @default(now()) @db.Timestamptz(6)
+  created_by  BigInt
+  fk_user Users @relation(fields: [created_by],references: [user_id])
+  is_settled Boolean
+  description String? @db.VarChar(300)
+  expense_shares ExpenseShares[]
+  @@map("expenses")
+}
+
+model ExpenseShares{
+  expense_id BigInt   
+  fk_expense Expenses @relation(fields:[expense_id],references:[expense_id])
+  user_id BigInt      
+  fk_user Users @relation(fields:[user_id],references: [user_id])
+  @@id([expense_id,user_id])
+  @@map("expense_shares")
 }
