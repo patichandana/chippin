@@ -50,6 +50,7 @@ model Currencies {
   symbol String @db.VarChar(100)
   code String @unique @db.VarChar(100)
   users Users[]
+  expenses Expenses[]
   @@map("currencies")
 }
 
@@ -64,10 +65,9 @@ model Expenses {
   expense_status String @db.VarChar(20)
   group_id BigInt
   fk_group Groups @relation(fields:[group_id], references: [group_id])
-  //add relation here
   amount Int
   currency_id Int
-  //add relation here
+  fk_currency_id Currencies @relation(fields: [currency_id],references: [currency_id])
   created_at  DateTime  @default(now()) @db.Timestamptz(6)
   expense_date DateTime @default(now()) @db.Timestamptz(6)
   created_by  BigInt
