@@ -16,6 +16,26 @@ await prisma.groupTypes.createMany({
             "group_type_name": "Other"
         }
     ]
+});
+
+await prisma.currencies.createMany({
+    data: [
+        {
+            "currency_name" : "US Dollar",
+            "code": "USD",
+            "symbol": "$"
+        },
+        {
+            "currency_name": "Indian Rupees",
+            "code": "INR",
+            "symbol": "₹"
+        },
+        {
+            "currency_name": "Canadian dollar",
+            "code": "CAD",
+            "symbol": "$"
+        }
+    ]
 }).then(async () => {
     await prisma.$disconnect()
 }).catch(async (e) => {
