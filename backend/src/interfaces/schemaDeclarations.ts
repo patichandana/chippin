@@ -31,3 +31,9 @@ export const jwtTokenUserSchema = zod.object({
     userId: zod.string(),
     username: zod.string()
 });
+
+export const groupUserSchema = zod.strictObject({
+    groupName: zod.string().min(1).max(50),
+    groupType: zod.number(),
+    userId: zod.number()
+})
