@@ -16,13 +16,10 @@ app.post('/signup', signup);
 app.post('/login', login);
 
 app.use((req, res, next) => {
-    console.log('hello world')
-    console.log(req.body)
     const userId = Number(authenticateRequest(req, res));
 
     if (userId != -1) {
         req.body["userId"] = userId;
-        console.log(req.body);
         next();
     }
 })
