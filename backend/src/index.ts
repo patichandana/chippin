@@ -1,6 +1,7 @@
 import express from 'express';
 import { signup } from "./routes/auth/signup.js";
 import { login } from "./routes/auth/login.js";
+import {addGroup} from "./routes/groups/addGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
 
@@ -18,15 +19,12 @@ app.use((req, res, next) => {
     const userId = Number(authenticateRequest(req, res));
 
     if (userId != -1) {
-        // req.userId = userId;
+        req.body["userId"] = userId;
         next();
     }
-    return;
 })
 
-app.get('/', (req, res) => {
-    // res.send(`your userId: ${req?.userId}`);
-});
+app.post('/groups', addGroup);
  
 app.use(handleErrors);
 
