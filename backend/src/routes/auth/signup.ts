@@ -24,10 +24,10 @@ export function signup(req, res, next) {
                     const createdUser = await prisma.users.create({
                         data: {
                             email: user.email,
-                            username: user.username,
                             password: hash,
                             firstname: user.firstname,
                             lastname: user.lastname,
+                            currency_id: user?.currencyId
                         }
                     });
                     res.send({
@@ -35,24 +35,23 @@ export function signup(req, res, next) {
                         email: createdUser.email,
                         firstname: createdUser.firstname,
                         lastname: createdUser.lastname,
-                        createdAt: createdUser.created_at
+                        createdAt: createdUser.created_at,
+                        currencyId: createdUser.currency_id
                     });
                 } catch (err) {
                     let errorType: SignupErrorType = "ERROR_CREATING_USER";
                     let details = "sign up failed";
-                    if (err.code == "P2002") {
+                    if (err?.code == "P2002") {
                         switch (err.meta.target[0]) {
                             case 'email': {
                                 errorType = "DUPLICATE_SIGNUP_EMAIL";
                                 details = 'user with this email already exists. try logging in';
                                 break;
                             };
-                            case 'username': {
-                                errorType = "DUPLICATE_USERNAME";
-                                details = 'user with this username already exists. choose another username';
+                            case 'currency_id': {
+                                errorType = "INVALID_CURRENCY";
                                 break;
                             };
-
                         }
                     }
                     next(new SignupError(errorType, details), req, res);

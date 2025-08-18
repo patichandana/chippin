@@ -13,25 +13,15 @@ export async function login(req, res, next) {
         const loginUser = loginUserSchema.parse(req.body)
 
         const dbUserRecord = await prisma.users.findFirstOrThrow({
-            where: {
-                OR: [
-                    {
-                        email: loginUser.email
-                    },
-                    {
-                        username: loginUser.username
-                    }
-                ]
-            }
+            where: { email: loginUser.email }
         })
 
         const result = await bcrypt.compare(loginUser.password, dbUserRecord.password);
-        
+
         if (result) {
             const jwtPayload = {
                 'userId': dbUserRecord.user_id.toString(),
-                'email': dbUserRecord.email,
-                'username': dbUserRecord.username
+                'email': dbUserRecord.email
             };
 
 
@@ -42,7 +32,7 @@ export async function login(req, res, next) {
                 "token": `Bearer ${jwtToken}`
             })
         } else {
-            next(new LoginError("INVALID_USERNAME_PASSWORD", "passwords don't match"), req, res);
+            next(new LoginError("INVALID_PASSWORD", "passwords don't match"), req, res);
         }
     } catch (err) {
         if (err instanceof ZodError) {
@@ -52,13 +42,9 @@ export async function login(req, res, next) {
                     next(new LoginError("ERROR_PARSING_EMAIL", e.details), req, res);
                     break;
                 }
-                case 'ERROR_PARSING_USERNAME': {
-                    next(new LoginError("ERROR_PARSING_USERNAME", e.details), req, res);
-                    break;
-                }
             }
         } else {
-            next(new LoginError("INVALID_USERNAME_PASSWORD", "username not found"), req, res);
+            next(new LoginError("INVALID_PASSWORD", "error logging in. Please reach out to admin"), req, res);
         }
     }
 }
