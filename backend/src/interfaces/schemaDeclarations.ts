@@ -7,14 +7,14 @@ const specialCharRegex = new RegExp(`[${specialCharacters.replace(/[-\/\\^$.*+?(
 
 export const signupUserSchema = zod.object({
     email: zod.string().email(),
-    username: zod.string().min(5).max(50),
     firstname: zod.string().min(1).max(50),
     lastname: zod.string().max(50).optional(),
     password: zod.string().min(8, 'Password must be min 8 characters long').
                             max(50, 'password maximum can be 50 char long').
                             regex(numberRegex, 'Make sure password has atleast one number').
                             regex(capitalLetterRegex, 'Make sure password has atleast one capital letter').
-                            regex(specialCharRegex, 'Make sure there\'s alteast one special character')
+                            regex(specialCharRegex, 'Make sure there\'s alteast one special character'),
+    currencyId: zod.number().optional().default(1)
 });
 
 export const loginUserSchema = zod.object({
@@ -28,8 +28,7 @@ export const loginUserSchema = zod.object({
 
 export const jwtTokenUserSchema = zod.object({
     email: zod.string().email(),
-    userId: zod.string(),
-    username: zod.string()
+    userId: zod.string()
 });
 
 export const groupUserSchema = zod.strictObject({

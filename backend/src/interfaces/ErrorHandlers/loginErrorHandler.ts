@@ -3,8 +3,8 @@ import { ErrorResponse, genericErrorMessages } from "./genericErrorHandler.js";
 //LoginErrors
 export const LoginErrorsObject = {
     ...genericErrorMessages,
-    INVALID_USERNAME_PASSWORD: {
-        message: "wrong username or password",
+    INVALID_PASSWORD: {
+        message: "wrong email or password",
         status: 400
     }
 }

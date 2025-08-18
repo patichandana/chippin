@@ -12,9 +12,9 @@ export const SignupErrorsObject = {
         details: 'user with this email already exists. choose another email',
         status: 400
     },
-    DUPLICATE_USERNAME: {
-        message: "username already taken. please use another usename",
-        details: 'user with this username already exists. choose another username',
+    INVALID_CURRENCY: {
+        message: "invalid currency",
+        details: 'enter a valid currency id',
         status: 400
     },
     ERROR_CREATING_USER: {

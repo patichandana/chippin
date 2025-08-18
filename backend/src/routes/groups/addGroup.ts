@@ -1,5 +1,6 @@
 import { groupUserSchema } from '../../interfaces/schemaDeclarations.js';
 import { prisma } from "../../db/connectDB.js";
+import { GroupErrorObject, GroupError } from "../../interfaces/ErrorHandlers/groupErrorHandler.js"
 
 
 export async function addGroup(req, res, next) {
@@ -23,7 +24,6 @@ export async function addGroup(req, res, next) {
             "createdAt": groupDBRecord.created_at
         })
     } catch(err) {
-        console.log(err);
-        res.send("error");
+        next(new GroupError("ERROR_CREATING_GROUP", null), req, res);
     }
 }
