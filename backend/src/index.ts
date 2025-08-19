@@ -2,6 +2,7 @@ import express from 'express';
 import { signup } from "./routes/auth/signup.js";
 import { login } from "./routes/auth/login.js";
 import {addGroup} from "./routes/groups/addGroup.js"
+import {addUsersToGroup} from "./routes/groups/users/addUsersToGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
 
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
 })
 
 app.post('/groups', addGroup);
+
+app.post('/groups/:group_id/users', addUsersToGroup);
  
 app.use(handleErrors);
 
