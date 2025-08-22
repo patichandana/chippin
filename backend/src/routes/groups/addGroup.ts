@@ -7,15 +7,23 @@ export async function addGroup(req, res, next) {
     try {
         const groupDetails = groupUserSchema.parse(req.body);
 
-        const groupDBRecord = await prisma.groups.create({
-           data: {
-            group_name: groupDetails.groupName,
-            group_type: groupDetails.groupType,
-            created_by: groupDetails.userId
-           }
-        })
+        const groupDBRecord = await prisma.$transaction(async () => {
+            const group = await prisma.groups.create({
+                data: {
+                    group_name: groupDetails.groupName,
+                    group_type: groupDetails.groupType,
+                    created_by: groupDetails.userId
+                }
+            });
+            await prisma.groupMembers.create({
+                data: {
+                    group_id: group.group_id,
+                    member_id: group.created_by
+                }
+            })
 
-        console.log(groupDBRecord);
+            return group;
+        })
 
         res.send({
             "groupId": groupDBRecord.group_id.toString(),

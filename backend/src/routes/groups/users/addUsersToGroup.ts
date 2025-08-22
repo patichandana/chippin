@@ -6,7 +6,6 @@ export async function addUsersToGroup(req, res, next) {
     try {
         //query should be like check if user is part of the group first
         //then make one query per user id in the users 
-        console.log(req)
         const userId = req.body.userId;
         const groupId = Number(req.params.group_id)
         const userIds = req.body.users;
@@ -23,20 +22,21 @@ export async function addUsersToGroup(req, res, next) {
         }
         let groupMemberList: groupMemberType[] = [];
 
-        for(const userId in userIds) {
+        userIds.forEach(userId => {
             groupMemberList.push({
                 group_id: groupId,
                 member_id: Number(userId)
             })
-        }
-
+        });
+        
         const count = await prisma.groupMembers.createMany({
             data: groupMemberList,
         })
 
         res.send({
-            count: count
-        })
+            status: "Success",
+            groupMembers: count
+        });
     } catch(e) {
         next()
     }
