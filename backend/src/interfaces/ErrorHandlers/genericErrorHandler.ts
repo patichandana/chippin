@@ -20,6 +20,16 @@ export const genericErrorMessages = {
         message: "enter valid email",
         status: 400,
         details: "make sure the email id is valid"
+    },
+    INVALID_JWT: {
+        message: "error validating user",
+        status: 500,
+        details: "please try logging in again"
+    },
+    NO_AUTH_HEADER: {
+        message: "error validating user",
+        status: 500,
+        details: "user hasn't logged in"
     }
 }
 

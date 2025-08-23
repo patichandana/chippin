@@ -20,6 +20,7 @@ model Users {
   groups     Groups[]
   expenses   Expenses[]
   expense_shares ExpenseShares[]
+  group_members GroupMembers[]
   @@map("users")
 }
 
@@ -34,6 +35,7 @@ model Groups {
   created_at DateTime  @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
   expenses Expenses[]
+  group_members GroupMembers[]
   @@map("groups")
 }
 
@@ -42,6 +44,15 @@ model GroupTypes {
   group_type_name String   @unique @db.VarChar(100)
   groups          Groups[]
   @@map("group_types")
+}
+
+model GroupMembers {
+  group_id BigInt
+  member_id BigInt
+  fk_group Groups @relation(fields:[group_id], references: [group_id])
+  fk_member Users @relation(fields:[member_id], references: [user_id])
+  @@id([group_id, member_id])
+  @@map("group_members")
 }
 
 model Currencies {
