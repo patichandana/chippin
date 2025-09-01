@@ -5,6 +5,7 @@ import {addGroup} from "./routes/groups/addGroup.js"
 import {addUsersToGroup} from "./routes/groups/users/addUsersToGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
+import { getCurrentUser } from './routes/users/getCurrentUser.js';
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use((req, res, next) => {
 app.post('/groups', addGroup);
 
 app.post('/groups/:group_id/users', addUsersToGroup);
+
+app.get('/user',getCurrentUser);
  
 app.use(handleErrors);
 

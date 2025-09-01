@@ -35,4 +35,12 @@ export const groupUserSchema = zod.strictObject({
     groupName: zod.string().min(1).max(50),
     groupType: zod.number(),
     userId: zod.number()
-})
+});
+
+export const userDetailsSchema = zod.object({
+    userId: zod.string(),
+    email: zod.string().email(),
+    firstName: zod.string().min(1).max(50),
+    lastName: zod.string().max(50).optional(),
+    currencyName: zod.string()
+});

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "start:debug": "tsc && node --inspect-brk --env-file=.env dist/src/index.js",
     "start": "tsc && node --env-file=.env dist/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
