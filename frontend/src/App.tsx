@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import TextInput from "./components/ui/Input";
 
 
@@ -11,6 +12,14 @@ function App() {
       </form>
   </div>
 );
+=======
+import LoginPage from "./pages/LoginPage";
+
+function App() {
+  return (<>
+    <LoginPage></LoginPage>
+  </>);
+>>>>>>> upstream/main
 }
 
 export default App
