@@ -9,6 +9,13 @@ import { getCurrentUser } from './routes/users/getCurrentUser.js';
 
 const app = express();
 
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allow specified HTTP methods
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
+//     res.setHeader('Access-Control-Allow-Headers', 'content-type application / json')
+//     next();
+// });
 app.use(express.json());
 
 //signup

@@ -26,6 +26,8 @@ export async function login(req, res, next) {
 
 
             const jwtToken = jwt.sign(jwtPayload, JWT_SECRET_KEY, { expiresIn: '8h' });
+            
+            // res.cookie('token', jwtToken, { httpOnly: true, SameSite: 'None' })
 
             res.send({
                 "status": "success",
