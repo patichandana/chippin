@@ -6,17 +6,19 @@ import {addUsersToGroup} from "./routes/groups/users/addUsersToGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
 import { getCurrentUser } from './routes/users/getCurrentUser.js';
-
+import cors from "cors";
+import cookieParser from 'cookie-parser';
 const app = express();
 
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allow specified HTTP methods
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specified headers
-//     res.setHeader('Access-Control-Allow-Headers', 'content-type application / json')
-//     next();
-// });
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'Cookie']
+    }));
+
 app.use(express.json());
+app.use(cookieParser());
 
 //signup
 app.post('/signup', signup);

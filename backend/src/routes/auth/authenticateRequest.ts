@@ -6,8 +6,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export const authenticateRequest = (req, res) => {
     try {
-        const jwtString = req.header('Authorization').split(' ');
-        const jwtToken = jwtString[0] == "Bearer" ? jwtString[1] : null;
+        const jwtToken = req.cookies?.Authorization ?? null;
 
         if (jwtToken) {
             try {
