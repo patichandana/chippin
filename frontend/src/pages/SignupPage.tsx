@@ -1,27 +1,23 @@
-import Button from "../components/ui/Button";
-import TextInput from "../components/ui/TextInput";
+import FlexMainDiv from "../components/ui/FlexMainDiv";
+import FlexNavBar from "../components/ui/FlexNavBar"; 
 import Card from "../components/ui/Card";
 import { FormEvent } from "react";
-import login from "../services/authService";
-import FlexMainDiv from "../components/ui/FlexMainDiv";
-import FlexNavBar from "../components/ui/FlexNavBar";
+import TextInput from "../components/ui/TextInput";
+import Button from "../components/ui/Button";
 
-async function handleSubmit(e: FormEvent) {
+async function handleSubmit(e:FormEvent){
   e.preventDefault();
-  const formData = new FormData(e.target as HTMLFormElement);
-  const formEntries = Object.fromEntries(formData.entries());
-  console.log(formEntries);
-  const response = await login(formEntries.email as string, formEntries.password as string);
-  console.log(response);
 }
 
-export default function LoginPage() {
+
+export default function SignupPage() {
   return (
     <FlexMainDiv>
       <FlexNavBar />
+
       <main className="flex flex-grow justify-center items-center">
         <Card>
-          <p className="text-3xl font-light my-4">Log in</p>
+          <p className="text-3xl font-light my-4">Sign Up</p>
           <form onSubmit={handleSubmit}>
             <TextInput
               className="my-4"
@@ -40,9 +36,15 @@ export default function LoginPage() {
               placeholder="Enter your password"
               required
             />
-            <Button className="my-4" type="submit">
-              Login
-            </Button>
+            <TextInput
+              className="my-4"
+              type="password"
+              id="password-confirm"
+              name="password"
+              placeholder="Enter your password Again"
+              required
+            />
+            <Button className="my-4" type="submit">Login</Button>
           </form>
         </Card>
       </main>
