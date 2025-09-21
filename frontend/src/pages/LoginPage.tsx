@@ -13,6 +13,20 @@ async function handleSubmit(e: FormEvent) {
   console.log(response);
 }
 
+async function dummy(e: FormEvent) {
+  console.log("clickd here");
+  e.preventDefault();
+
+  await fetch("https://1b255830934a.ngrok-free.app/user", {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      "ngrok-skip-browser-warning": "1",
+    },
+    credentials: "include",
+  });
+}
+
 export default function LoginPage() {
   return (
     <Card>
@@ -37,6 +51,9 @@ export default function LoginPage() {
         />
         <Button className="my-4" type="submit">
           Login
+        </Button>
+        <Button type="button" onClick={(e) => dummy(e)}>
+          click here
         </Button>
       </form>
     </Card>
