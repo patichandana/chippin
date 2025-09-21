@@ -27,11 +27,12 @@ export async function login(req, res, next) {
 
             const jwtToken = jwt.sign(jwtPayload, JWT_SECRET_KEY, { expiresIn: '8h' });
             
-            // res.cookie('token', jwtToken, { httpOnly: true, SameSite: 'None' })
+            // res.header('Set-Cookie', `Authorization=Bearer ${jwtToken}`)
+            res.cookie('Authorization', jwtToken, {  path: "/", httpOnly: true, secure: true, sameSite: "None"})
 
             res.send({
                 "status": "success",
-                "token": `Bearer ${jwtToken}`
+                "token": jwtToken
             })
         } else {
             next(new LoginError("INVALID_PASSWORD", "passwords don't match"), req, res);
