@@ -10,9 +10,9 @@ async function handleSubmit(e: FormEvent) {
   e.preventDefault();
   const formData = new FormData(e.target as HTMLFormElement);
   const formEntries = Object.fromEntries(formData.entries());
-  console.log(formEntries);
   const response = await login(formEntries.email as string, formEntries.password as string);
-  console.log(response);
+  console.log(response)
+  //navigate the user to dashboard, or throw error based on the req. response.
 }
 
 export default function LoginPage() {
