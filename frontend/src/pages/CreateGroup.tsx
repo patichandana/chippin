@@ -17,7 +17,7 @@ function handleSubmit(e: FormEvent) {
     console.log(name + " " + value);
   }
 
-  fetch(process.env.BACKEND_URL + "groups", {
+  fetch(import.meta.env.VITE_BACKEND_PATH + "groups", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "react-router-dom"
 import Button from "../ui/Button"
 
@@ -11,7 +10,7 @@ export default function FlexNavBar() {
             </div>
             <nav className="space-x-4 flex">
                 <Link to="/login" className="w-auto">
-                    <Button className="w-auto px-6 py-2">Log In</Button>
+                    <Button className="w-auto px-6 py-2 bg-blue-500">Log In</Button>
                 </Link>
                 <Link to="/signup" className="w-auto">
                     <Button className="w-auto px-6 py-2 bg-green-600 hover:bg-green-700">Sign Up</Button>
