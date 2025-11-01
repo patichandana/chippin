@@ -12,5 +12,8 @@ localhost:2000 {
     # reverse_proxy @app localhost:3000
 
 	reverse_proxy localhost:5173
+    log {
+        output stdout
+    }
 }
 
