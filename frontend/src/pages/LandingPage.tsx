@@ -3,9 +3,9 @@ import FlexNavBar from "../components/ui/FlexNavBar";
 import SvgRenderer from "../components/ui/SvgRenderer";
 
 export default function LandingPage() {
-  const theme = {
-    primaryColor: "#6C63FF", // Example light theme color
-  };
+  // const theme = {
+  //   primaryColor: "#6C63FF", // Example light theme color
+  // };
   return (
     <FlexMainDiv >
         <FlexNavBar />

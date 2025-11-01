@@ -20,7 +20,7 @@ export default function LoginPage() {
     <FlexMainDiv>
       <FlexNavBar />
       <main className="flex flex-grow justify-center items-center">
-        <Card>
+        <Card className=" max-w-md flex-grow-0">
           <p className="text-3xl font-light my-4">Log in</p>
           <form onSubmit={handleSubmit}>
             <TextInput
