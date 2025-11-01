@@ -40,7 +40,7 @@ export default function LoginPage() {
               placeholder="Enter your password"
               required
             />
-            <Button className="my-4" type="submit">
+            <Button className="my-4 bg-blue-500" type="submit">
               Login
             </Button>
           </form>

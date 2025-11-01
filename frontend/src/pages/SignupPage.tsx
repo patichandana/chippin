@@ -1,11 +1,11 @@
 import FlexMainDiv from "../components/ui/FlexMainDiv";
 import FlexNavBar from "../components/ui/FlexNavBar"; 
 import Card from "../components/ui/Card";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
-import { useState } from "react";
 import { currencies } from "../constants/currencies";
+import SvgRenderer from "../components/ui/SvgRenderer";
 
 
 
@@ -19,7 +19,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   // Set default currency to USD if available, otherwise use the first currency in the list
-  const defaultCurrency = currencies.find(currency => currency.code === 'USD');
+  const defaultCurrency = currencies.find(currency => currency.code === 'INR');
   const [selectedCurrency, setSelectedCurrency] = useState(
     defaultCurrency ? defaultCurrency.currency_id : currencies[0].currency_id
   );
@@ -55,6 +55,12 @@ export default function SignupPage() {
       },
       body: JSON.stringify(payload)
     });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("Server error:", text);
+      return;
+    } 
     const data = await response.json();
     console.log({data});
   }
@@ -64,9 +70,18 @@ export default function SignupPage() {
     <FlexMainDiv>
       <FlexNavBar />
 
-      <main className="flex flex-grow justify-center items-center">
-        <Card>
-          <p className="text-3xl font-light my-4">Sign Up</p>
+      <main className="flex flex-grow items-center justify-center px-4">
+        {/* Responsive container */}
+        <Card className="w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center p-0 overflow-hidden">
+
+          {/* Left side SVG - visible only on md and above */}
+          <div className="hidden md:flex flex-1 justify-center items-center p-8">
+          <SvgRenderer name="welcome" className="w-full max-w-sm h-auto" />
+        </div>
+
+        {/* Right side form */}
+        <div className="flex-1 w-full p-8">
+          <p className="text-3xl font-light mb-4 text-center">Sign Up</p>
           <form onSubmit={handleSubmit}>
             <TextInput
               className="my-4"
@@ -147,8 +162,9 @@ export default function SignupPage() {
               </select>
             </div>
 
-            <Button className="my-4" type="submit">Login</Button>
+            <Button className="my-4 bg-blue-500" type="submit">Register</Button>
           </form>
+        </div>  
         </Card>
       </main>
     </FlexMainDiv>
