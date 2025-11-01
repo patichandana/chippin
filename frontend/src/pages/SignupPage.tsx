@@ -7,6 +7,7 @@ import Button from "../components/ui/Button";
 import { currencies } from "../constants/currencies";
 import SvgRenderer from "../components/ui/SvgRenderer";
 import { useNavigate } from "react-router-dom";
+import signup from "../services/signupService";
 
 
 
@@ -19,7 +20,8 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // Set default currency to USD if available, otherwise use the first currency in the list
+  
+  // Set default currency to INR if available, otherwise use the first currency in the list
   const defaultCurrency = currencies.find(currency => currency.code === 'INR');
   const [selectedCurrency, setSelectedCurrency] = useState(
     defaultCurrency ? defaultCurrency.currency_id : currencies[0].currency_id
@@ -49,24 +51,17 @@ export default function SignupPage() {
       currencyId: selectedCurrency
     };
     console.log(payload);
-    const response = await fetch("http://localhost:3000/signup",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("Server error:", text);
-      return;
-    } 
-    const data = await response.json();
-    console.log({data});
-
-    // after successful signup, navigate to login page
+    
+    try {
+      const data = await signup(payload);
+      console.log("Signup successful:", data);
+      // after successful signup, navigate to login page
     navigate("/login");
+    } catch (err) {
+      console.error("Signup failed:", err);
+    }
+
+    
   }
 
 
