@@ -1,4 +1,4 @@
 .DS_Store
-compose.yaml
 .env
-chippin.sql
+chippin-db.sql
+compose.yaml
