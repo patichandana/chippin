@@ -1,4 +1,4 @@
 .DS_Store
-compose.caddy.yaml
+compose.yaml
 .env
 chippin.sql
