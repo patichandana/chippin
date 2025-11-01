@@ -6,11 +6,12 @@ import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
 import { currencies } from "../constants/currencies";
 import SvgRenderer from "../components/ui/SvgRenderer";
-
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function SignupPage() {
+  const navigate = useNavigate();
 
   // State for each field
   const [email, setEmail] = useState("");
@@ -63,6 +64,9 @@ export default function SignupPage() {
     } 
     const data = await response.json();
     console.log({data});
+
+    // after successful signup, navigate to login page
+    navigate("/login");
   }
 
 
