@@ -17,14 +17,14 @@ function handleSubmit(e: FormEvent) {
     console.log(name + " " + value);
   }
 
-  fetch(process.env.BACKEND_URL + "groups", {
+  fetch(import.meta.env.VITE_BACKEND_PATH + "groups", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       groupName: x.get("groupName"),
-      groupType: Number(x.get("groupType"))
+      groupType: Number(x.get("groupType")),
       // file: x.get("file"),
     }),
   });
