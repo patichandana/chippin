@@ -73,9 +73,9 @@ enum Status {
 model Expenses {
   expense_id BigInt   @id @default(autoincrement())
   expense_name String @db.VarChar(200)
-  expense_status String @db.VarChar(20)
-  group_id BigInt
-  fk_group Groups @relation(fields:[group_id], references: [group_id])
+  expense_status String @db.VarChar(20) @default("ACTIVE")
+  group_id BigInt?
+  fk_group Groups? @relation(fields:[group_id], references: [group_id])
   amount Int
   currency_id Int
   fk_currency_id Currencies @relation(fields: [currency_id],references: [currency_id])
@@ -83,17 +83,19 @@ model Expenses {
   expense_date DateTime @default(now()) @db.Timestamptz(6)
   created_by  BigInt
   fk_user Users @relation(fields: [created_by],references: [user_id])
-  is_settled Boolean
+  is_settled Boolean @default(false)
   description String? @db.VarChar(300)
   expense_shares ExpenseShares[]
   @@map("expenses")
 }
 
 model ExpenseShares{
+  expense_share_id BigInt  @id @default(autoincrement())
   expense_id BigInt   
   fk_expense Expenses @relation(fields:[expense_id],references:[expense_id])
-  user_id BigInt      
-  fk_user Users @relation(fields:[user_id],references: [user_id])
-  @@id([expense_id,user_id])
+  user_id BigInt
+  fk_user Users @relation(fields:[user_id],references: [user_id]) 
+  paid_amount Int @default(0)
+  owed_amount Int @default(0)
   @@map("expense_shares")
 }
