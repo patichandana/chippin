@@ -24,7 +24,7 @@ function handleSubmit(e: FormEvent) {
     },
     body: JSON.stringify({
       groupName: x.get("groupName"),
-      groupType: Number(x.get("groupType"))
+      groupType: Number(x.get("groupType")),
       // file: x.get("file"),
     }),
   });
