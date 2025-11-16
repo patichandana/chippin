@@ -2,3 +2,4 @@
 .env
 chippin-db.sql
 compose.yaml
+Caddyfile
