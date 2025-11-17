@@ -9,6 +9,8 @@ import { getCurrentUser } from './routes/users/getCurrentUser.js';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { addExpense } from './routes/expenses/addExpense.js';
+import { getCurrencies } from './routes/expenses/getCurrencies.js';
+
 const app = express();
 
 app.use(
@@ -43,6 +45,8 @@ app.post('/groups/:group_id/users', addUsersToGroup);
 app.get('/user',getCurrentUser);
 
 app.post('/expense', addExpense);
+
+app.get('/currencies', getCurrencies);
 
 app.use(handleErrors);
 

@@ -20,27 +20,29 @@ export default function LoginPage() {
     <FlexMainDiv>
       <FlexNavBar />
       <main className="flex flex-grow justify-center items-center">
-        <Card className=" max-w-md flex-grow-0">
-          <p className="text-3xl font-light my-4">Log in</p>
+        <Card className="w-full max-w-xl sm:w-full" title="Log in">
+          {/* <p className="text-3xl font-light my-4">Log in</p> */}
           <form onSubmit={handleSubmit}>
             <TextInput
-              className="my-4"
+              className="w-full required"
               type="email"
               id="email"
               name="email"
               placeholder="Enter your email"
               autoComplete="email"
+              label="Email"
               required
             />
             <TextInput
-              className="my-4"
+              className="w-full required"
               type="password"
               id="password"
               name="password"
               placeholder="Enter your password"
+              label="Password"
               required
             />
-            <Button className="my-4 bg-blue-500" type="submit">
+            <Button className="max-w-fit" type="submit">
               Login
             </Button>
           </form>

@@ -32,19 +32,21 @@ function handleSubmit(e: FormEvent) {
 
 export function CreateGroup() {
   return (
-    <Card>
+    <Card title="Create Group">
       <form onSubmit={handleSubmit}>
         <TextInput
-          className="my-4"
           name="groupName"
+          label="Group name"
           placeholder="enter group name"
         ></TextInput>
-        <TextInput
-          className="my-4"
+        {/* need to put group type lov here  */}
+        {/* <TextInput
+          className=""
           name="groupType"
           type="number"
-          placeholder="enter group name"
-        ></TextInput>
+          label="Group type"
+          placeholder="enter group tame"
+        ></TextInput> */}
         <input type="file" id="group-image"></input> <br />
         <Button className="my-4" type="submit">
           Submit
