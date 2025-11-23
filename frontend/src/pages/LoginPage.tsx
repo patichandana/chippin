@@ -50,7 +50,7 @@ export default function LoginPage() {
               label="Password"
               required
             />
-            <Button className="max-w-fit" type="submit">
+            <Button className="max-w-fit mt-4 " type="submit">
               Login
             </Button>
           </form>

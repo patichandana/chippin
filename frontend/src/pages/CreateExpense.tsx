@@ -87,7 +87,7 @@ export function CreateExpense() {
             className="w-25 remove-arrow"
           ></TextInput>
         </div>
-        <Button className="h-fit max-w-fit" type="submit">
+        <Button className="h-fit max-w-fit mt-4 " type="submit">
           Create
         </Button>
       </form>

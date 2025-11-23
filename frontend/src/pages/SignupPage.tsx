@@ -168,7 +168,7 @@ export default function SignupPage() {
               </select>
             </div>
 
-            <Button className="max-w-fit" type="submit">Register</Button>
+            <Button className="max-w-fit mt-4 " type="submit">Register</Button>
           </form>
         </div>  
         </Card>
