@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom"
-import Button from "../ui/Button"
+import Button from "../ui/Button"   
+import { Menu } from "lucide-react";
 
-export default function FlexNavBar() {
+export default function FlexNavBar({toggleSidebar}: {toggleSidebar?: () => void}) {
     return (
-        <header className="flex justify-between items-center p-4 bg-gray-50 flex-shrink-0">
+        <header className="flex justify-between items-center p-2 h-14 bg-gray-700 flex-shrink-0">
+            <button onClick={toggleSidebar} className="text-white"><Menu/></button>
+            
             <div className="flex items-center space-x-2 text-2xl font-light italic cursor-pointer">
                 <img src="/split.png" alt="Logo" className="h-6 w-6"/>
-                <Link to="/" >chippin</Link>
+                <Link to="/" className="text-white">chippin</Link>
             </div>
             <nav className="space-x-4 flex">
                 <Link to="/login" className="w-auto">

@@ -5,24 +5,32 @@ import { FormEvent } from "react";
 import login from "../services/authService";
 import FlexMainDiv from "../components/ui/FlexMainDiv";
 import FlexNavBar from "../components/ui/FlexNavBar";
+import { useNavigate } from "react-router-dom";
 
-async function handleSubmit(e: FormEvent) {
+async function handleSubmit(e: FormEvent, navigate: (path: string) => void) {
   e.preventDefault();
   const formData = new FormData(e.target as HTMLFormElement);
   const formEntries = Object.fromEntries(formData.entries());
-  const response = await login(formEntries.email as string, formEntries.password as string);
-  console.log(response)
-  //navigate the user to dashboard, or throw error based on the req. response.
+  try {
+    const response = await login(formEntries.email as string, formEntries.password as string);
+    console.log(response.json());
+    //navigate the user to dashboard, or throw error based on the req. response.
+    navigate("/dashboard");
+  } catch (err) {
+    console.error("Login failed:", err);
+  }
+  
 }
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   return (
     <FlexMainDiv>
       <FlexNavBar />
       <main className="flex flex-grow justify-center items-center">
         <Card className="w-full max-w-xl sm:w-full" title="Log in">
           {/* <p className="text-3xl font-light my-4">Log in</p> */}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e, navigate)}>
             <TextInput
               className="w-full required"
               type="email"
