@@ -75,7 +75,7 @@ export default function SignupPage() {
     <FlexMainDiv>
       <FlexNavBar />
         {message && (
-          <div className="bg-green-600 text-white p-3 text-center mb-4">
+          <div className="bg-green-600 text-white p-3 text-center">
             {message}
           </div>
         )}
