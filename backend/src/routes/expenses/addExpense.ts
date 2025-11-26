@@ -1,5 +1,7 @@
 import { prisma } from "../../db/connectDB.js";
 import { Prisma } from "@prisma/client";
+import { parseObject } from "../../utils/commonUtil.js";
+import { isUserInGroup } from "../../services/groupService.js";
 
 /*
     issues: 
@@ -28,17 +30,21 @@ export async function addExpense(req, res, next) {
         let paidBy = [];
         let currentUserShare = 0;
 
+        if (!isUserInGroup(expenseDetails.groupId, req.body.userId)) {
+            throw new Error("can't add expense. user not part of this group");
+        }
         //first: create the expense - and get the expense id
         const expenseDBRecord = await prisma.$transaction(async () => {
             try {
                 const expense = await prisma.expenses.create({
                     data: {
-                        expense_name: expenseDetails.expenseName,
+                        expenseName: expenseDetails.expenseName,
                         description: expenseDetails.description,
-                        expense_date: new Date(expenseDetails.expenseDate),
+                        expenseDate: new Date(expenseDetails.expenseDate),
                         amount: expenseDetails.totalAmount,
-                        currency_id: expenseDetails.currencyId,
-                        created_by: expenseDetails.userId
+                        currencyId: expenseDetails.currencyId,
+                        createdBy: expenseDetails.userId,
+                        groupId: expenseDetails.groupId
                     }
                 });
 
@@ -50,25 +56,18 @@ export async function addExpense(req, res, next) {
                         currentUserShare += share.paidAmount - share.owedAmount;
 
                     expenseShares.push({
-                        "expense_id": expense.expense_id,
-                        "user_id": share.userId,
-                        "paid_amount": share.paidAmount,
-                        "owed_amount": share.owedAmount
+                        "expenseId": expense.expenseId,
+                        "userId": share.userId,
+                        "paidAmount": share.paidAmount,
+                        "owedAmount": share.owedAmount
                     })
                 })
 
                 await prisma.expenseShares.createMany({
                     data: expenseShares
                 })
-                
-                res.send({
-                    "expenseId": Number(expense.expense_id),
-                    "expense_name": expense.expense_name,
-                    "paidBy": paidBy,
-                    "amount": expense.amount,
-                    "currentUserShare": currentUserShare,
-                    "expenseDate": expense.expense_date
-                });
+
+                res.send(parseObject(expense));
             } catch(err) {
                 console.log(err);
                 res.send(err);

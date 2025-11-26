@@ -4,6 +4,7 @@ import { SignupError, SignupErrorType } from '../../interfaces/ErrorHandlers/sig
 import { signupUserSchema } from '../../interfaces/schemaDeclarations.js';
 import { ZodError } from 'zod';
 import { ErrorType } from '../../interfaces/ErrorHandlers/genericErrorHandler.js';
+import { parseObject } from '../../utils/commonUtil.js';
 
 const saltRounds = 10;
 
@@ -27,17 +28,14 @@ export function signup(req, res, next) {
                             password: hash,
                             firstname: user.firstname,
                             lastname: user.lastname,
-                            currency_id: user?.currencyId
+                            currencyId: user?.currencyId
+                        },
+                        omit: {
+                            password: true
                         }
                     });
-                    res.send({
-                        userId: createdUser.user_id.toString(),
-                        email: createdUser.email,
-                        firstname: createdUser.firstname,
-                        lastname: createdUser.lastname,
-                        createdAt: createdUser.created_at,
-                        currencyId: createdUser.currency_id
-                    });
+                    
+                    res.send(parseObject(createdUser));
                 } catch (err) {
                     let errorType: SignupErrorType = "ERROR_CREATING_USER";
                     let details = "sign up failed";

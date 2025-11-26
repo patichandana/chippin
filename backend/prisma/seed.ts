@@ -4,15 +4,15 @@ const prisma = new PrismaClient()
 async function main() {
   // Group Types
   const groupTypes = [
-    { group_type_name: 'Home' },
-    { group_type_name: 'Trip' },
-    { group_type_name: 'Friends' },
-    { group_type_name: 'Other' },
+    { groupTypeName: 'Home' },
+    { groupTypeName: 'Trip' },
+    { groupTypeName: 'Friends' },
+    { groupTypeName: 'Other' },
   ]
 
   for (const g of groupTypes) {
     await prisma.groupTypes.upsert({
-      where: { group_type_name: g.group_type_name },
+      where: { groupTypeName: g.groupTypeName },
       update: {}, // no update needed for group types
       create: g,
     })
@@ -20,9 +20,9 @@ async function main() {
 
   // Currencies
   const currencies = [
-    { currency_name: 'US Dollar', code: 'USD', symbol: '$' },
-    { currency_name: 'Indian Rupees', code: 'INR', symbol: '₹' },
-    { currency_name: 'Canadian dollar', code: 'CAD', symbol: 'CA$' },
+    { currencyName: 'US Dollar', code: 'USD', symbol: '$' },
+    { currencyName: 'Indian Rupees', code: 'INR', symbol: '₹' },
+    { currencyName: 'Canadian dollar', code: 'CAD', symbol: 'CA$' },
   ]
 
   for (const c of currencies) {
