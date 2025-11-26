@@ -8,13 +8,13 @@ export default function MySideNavBar({ isOpen}:{ isOpen?: boolean}) {
   const links = [
     { to: "/dashboard", label: "Dashboard" },
     { to: "/notifications", label: "Notifications" },
-    { to: "/expenses", label: "Expenses" },
-    { to: "/groups", label: "Groups" },
+    { to: "/create-expense", label: "Expenses" },
+    { to: "/create-group", label: "Groups" },
     { to: "/friends", label: "Friends" },
   ];
 
   return (
-    <nav className={`flex flex-col bg-gray-700 ${isOpen ? "w-64":"w-0"} transition duration-5000 flex-shrink-0`}>
+    <nav className={`flex flex-col bg-gray-700 transition-all duration-300 ease-in-out ${isOpen ? "w-64":"w-0"} flex-shrink-0`}>
       {/* <button onClick={toggleNavbar}><Menu color='white' /></button> */}
       {links.map(({ to, label }) => (
         <Link key={to} to={to} className="text-white hover:bg-gray-700 rounded text-center p-2" >

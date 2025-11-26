@@ -2,8 +2,4 @@
 .env
 chippin-db.sql
 compose.yaml
-<<<<<<< Updated upstream
 Caddyfile
-=======
-Caddyfile
->>>>>>> Stashed changes
