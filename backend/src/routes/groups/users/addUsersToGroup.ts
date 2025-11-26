@@ -10,25 +10,25 @@ export async function addUsersToGroup(req, res, next) {
         const groupId = Number(req.params.group_id)
         const userIds = req.body.users;
 
-        const userInGroup = await isUserInGroup(userId, groupId);
-        if(!userInGroup) {
+        const userInGroup = await isUserInGroup(groupId, userId);
+        if (!userInGroup) {
             next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", "user not part of the group"));
-            return ;
+            return;
         }
 
         type groupMemberType = {
-            group_id: number,
-            member_id: number
+            groupId: number,
+            memberId: number
         }
         let groupMemberList: groupMemberType[] = [];
 
         userIds.forEach(userId => {
             groupMemberList.push({
-                group_id: groupId,
-                member_id: Number(userId)
+                groupId: groupId,
+                memberId: Number(userId)
             })
         });
-        
+
         const count = await prisma.groupMembers.createMany({
             data: groupMemberList,
         })
@@ -37,7 +37,7 @@ export async function addUsersToGroup(req, res, next) {
             status: "Success",
             groupMembers: count
         });
-    } catch(e) {
-        next()
+    } catch (e) {
+        next();
     }
 }

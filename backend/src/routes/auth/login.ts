@@ -20,7 +20,7 @@ export async function login(req, res, next) {
 
         if (result) {
             const jwtPayload = {
-                'userId': dbUserRecord.user_id.toString(),
+                'userId': dbUserRecord.userId.toString(),
                 'email': dbUserRecord.email
             };
 
