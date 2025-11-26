@@ -10,6 +10,7 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { addExpense } from './routes/expenses/addExpense.js';
 import { getCurrencies } from './routes/expenses/getCurrencies.js';
+import { getGroupDetails } from './routes/groups/getGroupDetails.js';
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use((req, res, next) => {
 })
 
 app.post('/groups', addGroup);
+
+app.get('/groups/:group_id', getGroupDetails);
 
 app.post('/groups/:group_id/users', addUsersToGroup);
 
