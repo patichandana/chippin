@@ -14,7 +14,7 @@ dist-ssr
 
 # cache
 *.tsbuildinfo
-
+output.css
 
 # Editor directories and files
 .vscode/*

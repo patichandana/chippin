@@ -22,6 +22,7 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   
   // Set default currency to INR if available, otherwise use the first currency in the list
   const defaultCurrency = currencies.find(currency => currency.code === 'INR');
@@ -58,7 +59,10 @@ export default function SignupPage() {
       const data = await signup(payload);
       console.log("Signup successful:", data);
       // after successful signup, navigate to login page
-    navigate("/login");
+      setMessage("Signup successful! Redirecting to login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       console.error("Signup failed:", err);
     }
@@ -70,6 +74,11 @@ export default function SignupPage() {
   return (
     <FlexMainDiv>
       <FlexNavBar />
+        {message && (
+          <div className="bg-green-600 text-white p-3 text-center">
+            {message}
+          </div>
+        )}
 
       <main className="flex flex-grow items-center justify-center px-4">
         {/* Responsive container */}
@@ -168,7 +177,7 @@ export default function SignupPage() {
               </select>
             </div>
 
-            <Button className="max-w-fit" type="submit">Register</Button>
+            <Button className="max-w-fit mt-4 " type="submit">Register</Button>
           </form>
         </div>  
         </Card>
