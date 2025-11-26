@@ -33,7 +33,7 @@ export function GroupTypeLoV({ ...props }) {
     <div className={`absolute ${props.className}`}>
       <p className="max-w-fit mb-2">{props.label}</p>
       <button
-        className={`w-fit pl-4 py-2 border border-r-0 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        className={`w-fit pl-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
         onClick={(e) => {
           e.preventDefault();
           setIsDropDownOpen(!isDropDownOpen);
@@ -41,7 +41,7 @@ export function GroupTypeLoV({ ...props }) {
       >
         <span className="w-fit flex">
           <span className="">{selectedValue}</span>
-          <ChevronDown className="max-w-fit inline" />
+          <ChevronDown className="max-w-fit inline mx-1" />
         </span>
       </button>
       <div className={`${isDropDownOpen ? "visible" : "hidden"} w-1000 relative bg-white`}>
@@ -49,7 +49,7 @@ export function GroupTypeLoV({ ...props }) {
           {props.options.map((v: groupTypeLoVOption) => {
             return (
               <li
-                className="py-2 text-center px-2 border border-t-0 rounded-md focus:ring-2 focus:ring-blue-500"
+                className="py-2 text-center px-8 border border-t-0 rounded-md focus:ring-2 focus:ring-blue-500"
                 key={v.group_type_id}
               >
                 <button

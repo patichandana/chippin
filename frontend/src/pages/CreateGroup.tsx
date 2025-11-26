@@ -69,6 +69,7 @@ export function CreateGroup() {
         {/* need to put group type lov here  */}
         <div className="mb-16">
           <GroupTypeLoV
+          defaultValue="Home"
           label="Group type"
           options={groupTypes}
           className="inline-block w-fit mr-2"
@@ -87,7 +88,7 @@ export function CreateGroup() {
           placeholder="enter group tame"
         ></TextInput> */}
         {/* <input type="file" id="group-image"></input> <br /> */}
-        <Button className="my-4" type="submit">
+        <Button className="my-12" type="submit">
           Submit
         </Button>
       </form>

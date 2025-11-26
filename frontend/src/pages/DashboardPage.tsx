@@ -3,6 +3,7 @@
 import MySideNavBar from "../components/ui/MySideNavBar";
 import FlexNavBar from "../components/ui/FlexNavBar";
 import { useState } from "react";
+import { CreateExpense } from "./CreateExpense";
 
 export default function DashboardPage
 () {
@@ -15,6 +16,7 @@ export default function DashboardPage
         <MySideNavBar isOpen={isOpen}/>
         <main className="flex-1 bg-gray-50 p-4">
           <h1 className="text-2xl mb-4 text-white">Dashboard</h1>
+          <CreateExpense />
         </main>
       </div>
     </div>
