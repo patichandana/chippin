@@ -1,6 +1,7 @@
 import { groupUserSchema } from '../../interfaces/schemaDeclarations.js';
 import { prisma } from "../../db/connectDB.js";
 import { GroupErrorObject, GroupError } from "../../interfaces/ErrorHandlers/groupErrorHandler.js"
+import { parseObject } from "../../utils/commonUtil.js";
 
 
 export async function addGroup(req, res, next) {
@@ -10,27 +11,22 @@ export async function addGroup(req, res, next) {
         const groupDBRecord = await prisma.$transaction(async () => {
             const group = await prisma.groups.create({
                 data: {
-                    group_name: groupDetails.groupName,
-                    group_type: groupDetails.groupType,
-                    created_by: groupDetails.userId
+                    groupName: groupDetails.groupName,
+                    groupType: groupDetails.groupType,
+                    createdBy: groupDetails.userId
                 }
             });
             await prisma.groupMembers.create({
                 data: {
-                    group_id: group.group_id,
-                    member_id: group.created_by
+                    groupId: group.groupId,
+                    memberId: group.createdBy
                 }
             })
 
             return group;
         })
 
-        res.send({
-            "groupId": groupDBRecord.group_id.toString(),
-            "groupName": groupDBRecord.group_name,
-            "createdBy": groupDBRecord.created_by.toString(),
-            "createdAt": groupDBRecord.created_at
-        })
+        res.send(parseObject(groupDBRecord));
     } catch(err) {
         next(new GroupError("ERROR_CREATING_GROUP", null), req, res);
     }
