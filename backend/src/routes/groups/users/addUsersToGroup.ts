@@ -8,12 +8,24 @@ export async function addUsersToGroup(req, res, next) {
         //then make one query per user id in the users 
         const userId = req.body.userId;
         const groupId = Number(req.params.group_id)
-        const userIds = req.body.users;
+        const userIds = req.body.users.map(Number);
 
         const userInGroup = await isUserInGroup(userId, groupId);
         if(!userInGroup) {
             next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", "user not part of the group"));
             return ;
+        }
+
+        // check if all the userIds exist in the users table
+        const existingUsers = await prisma.users.findMany({
+            where: { user_id: { in: userIds } },
+            select: { user_id: true }
+        });
+        const existingUserIds = existingUsers.map(user => user.user_id);
+        const invalidUserIds = userIds.filter(id => !existingUserIds.includes(id));
+        if(invalidUserIds.length > 0) {
+            return next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", 
+                `the following user ids do not exist: ${invalidUserIds.join(", ")}`));
         }
 
         type groupMemberType = {

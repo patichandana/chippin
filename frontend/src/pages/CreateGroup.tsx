@@ -7,65 +7,84 @@ import { /*useEffect,*/ useState } from "react";
 import { createGroup } from "../services/createGroup";
 import { groupTypes } from "../constants/groupTypes";
 import { GroupTypeLoV } from "../components/ui/GroupTypeLoV";
+import { addUsersToGroup } from "../services/addUsersToGroup";
 
 export function CreateGroup() {
   // const [loading, setLoading] = useState(true);
   const [groupType, setGroupType] = useState();
+  const [users, setUsers] = useState([""]);
+
+  function addUserField() {
+    setUsers([...users, ""]);
+  }
+
+  function updateUserField(index: number, value: string) {
+    const updated = [...users];
+    updated[index] = value;
+    setUsers(updated);
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formEntries = Object.fromEntries(formData.entries());
 
-    const response = await createGroup({ 
+    const group = await createGroup({ 
       groupName: formEntries.groupName as string,
       groupType: Number(groupType),
-    //   groupMembers: [
-    //   { userId: 1 }, //hardcoded user id for now
-    // ]
   });
-  console.log(response);
+  console.log(group);
 
-  // const fileInput = document.getElementById("group-image") as HTMLInputElement;
-  // const selectedFiles = fileInput?.files;
+  const users = Object.keys(formEntries)
+    .filter(key => key.startsWith("user")) // only keys like user1, user2 etc.
+    .map(key => formEntries[key])
+    .filter(val => val !== ""); // ignore empty fields
 
-  // console.log(selectedFiles);
-  // // x.append("file", selectedFiles[0]);
+  console.log("Collected users:", users);
+  const groupId = group.group_id; 
+  console.log("New Group ID:", groupId);
 
-  // for (const [name, value] of x.entries()) {
-  //   console.log(name + " " + value);
-  // }
+  const addUsersResponse = await addUsersToGroup({
+    group_id: groupId,
+    users: users
+  });
 
-  // fetch(import.meta.env.VITE_BACKEND_PATH + "groups", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     groupName: x.get("groupName"),
-  //     groupType: Number(x.get("groupType")),
-  //     // file: x.get("file"),
-  //   }),
-  // });
+  console.log(addUsersResponse);
+
+  
 }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(false);
-  //   };
-
-  //   fetchData();
-  // });
-  // if (loading) return <div>loading....</div>;
+  
   return (
     <Card title="Create Group" className="w-full h-full flex-grow-0">
       <form onSubmit={handleSubmit}>
         <TextInput
-        className="w-full required"
+        className="required"
           name="groupName"
           label="Group name"
           placeholder="enter group name"
         ></TextInput>
+        <h2 className="mt-8 mb-4 text-lg">Group Members</h2>
+        {/* need to show the current user detils here */}
+        {users.map((value, index) => (
+          <div key={index} className="mb-2">
+            <TextInput
+              label={`User ${index + 1}`}
+              name={`user${index + 1}`}   // IMPORTANT: user1, user2, user3
+              placeholder="Enter email or username"
+              value={value}
+              onChange={(e) => updateUserField(index, e.target.value)}
+            />
+          </div>
+      ))}
+      <button
+        type="button"
+        onClick={addUserField}
+        className="bg-white text-blue-600 p-0 text-sm hover:text-blue-800 hover:underline"
+      >
+        + Add another user
+      </button>
+
         {/* need to put group type lov here  */}
         <div className="mb-16">
           <GroupTypeLoV
@@ -77,17 +96,7 @@ export function CreateGroup() {
           lovId={[groupType, setGroupType]}
           value={groupType}></GroupTypeLoV>
         </div>
-          
-        
-        
-        {/* <TextInput
-          className=""
-          name="groupType"
-          type="number"
-          label="Group type"
-          placeholder="enter group tame"
-        ></TextInput> */}
-        {/* <input type="file" id="group-image"></input> <br /> */}
+
         <Button className="my-12" type="submit">
           Submit
         </Button>
