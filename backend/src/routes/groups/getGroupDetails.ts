@@ -29,8 +29,8 @@ import { parseObject } from "../../utils/commonUtil.js";
 
 export async function getGroupDetails(req, res, next) {
     try {
-        const groupId = Number(req.params.group_id);
-        const userId = Number(req.body.userId);
+        const groupId = BigInt(req.params.group_id);
+        const userId = BigInt(req.body.userId);
         //security: need to check if the user is in the group.
         const userInGroup = await isUserInGroup(groupId, userId);
         if(!userInGroup) {

@@ -7,21 +7,21 @@ import { /*useEffect,*/ useState } from "react";
 import { createGroup } from "../services/createGroup";
 import { groupTypes } from "../constants/groupTypes";
 import { GroupTypeLoV } from "../components/ui/GroupTypeLoV";
-import { addUsersToGroup } from "../services/addUsersToGroup";
+import { addUsersToGroupByEmail } from "../services/addUsersToGroupByEmail";
 
 export function CreateGroup() {
   // const [loading, setLoading] = useState(true);
   const [groupType, setGroupType] = useState();
-  const [users, setUsers] = useState([""]);
+  const [emails, setEmails] = useState([""]);
 
   function addUserField() {
-    setUsers([...users, ""]);
+    setEmails([...emails, ""]);
   }
 
   function updateUserField(index: number, value: string) {
-    const updated = [...users];
+    const updated = [...emails];
     updated[index] = value;
-    setUsers(updated);
+    setEmails(updated);
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -35,18 +35,18 @@ export function CreateGroup() {
   });
   console.log(group);
 
-  const users = Object.keys(formEntries)
-    .filter(key => key.startsWith("user")) // only keys like user1, user2 etc.
+  const emails = Object.keys(formEntries)
+    .filter(key => key.startsWith("email")) // only keys like user1, user2 etc.
     .map(key => formEntries[key])
     .filter(val => val !== ""); // ignore empty fields
 
-  console.log("Collected users:", users);
-  const groupId = group.group_id; 
+  console.log("Collected users:", emails);
+  const groupId = group.groupId; 
   console.log("New Group ID:", groupId);
 
-  const addUsersResponse = await addUsersToGroup({
-    group_id: groupId,
-    users: users
+  const addUsersResponse = await addUsersToGroupByEmail({
+    groupId: groupId,
+    emails: emails as string[]
   });
 
   console.log(addUsersResponse);
@@ -64,14 +64,14 @@ export function CreateGroup() {
           label="Group name"
           placeholder="enter group name"
         ></TextInput>
-        <h2 className="mt-8 mb-4 text-lg">Group Members</h2>
+        <h2 className="mt-2 mb-4 text-lg">Group Members</h2>
         {/* need to show the current user detils here */}
-        {users.map((value, index) => (
+        {emails.map((value, index) => (
           <div key={index} className="mb-2">
             <TextInput
-              label={`User ${index + 1}`}
-              name={`user${index + 1}`}   // IMPORTANT: user1, user2, user3
-              placeholder="Enter email or username"
+              label={`Email ${index + 1}`}
+              name={`email${index + 1}`}   // email1, email2, ...
+              placeholder="Enter email of user"
               value={value}
               onChange={(e) => updateUserField(index, e.target.value)}
             />

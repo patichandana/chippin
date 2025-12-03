@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import { addExpense } from './routes/expenses/addExpense.js';
 import { getCurrencies } from './routes/expenses/getCurrencies.js';
 import { getGroupDetails } from './routes/groups/getGroupDetails.js';
+import { addUsersToGroupByEmail } from './routes/groups/users/addUsersToGroupByEmail.js';
 
 const app = express();
 
@@ -44,6 +45,8 @@ app.post('/groups', addGroup);
 app.get('/groups/:group_id', getGroupDetails);
 
 app.post('/groups/:group_id/users', addUsersToGroup);
+
+app.post('/groups/:group_id/emails', addUsersToGroupByEmail);
 
 app.get('/user',getCurrentUser);
 
