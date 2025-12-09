@@ -21,7 +21,8 @@ import { isUserInGroup } from "../../services/groupService.js";
 
 export async function addExpense(req, res, next) {
     try {
-        if (req.body.userId == -1 || req.body.userId == undefined || Number.isNaN(req.body.userId))
+        console.log("REQ.USER =>", req.user);
+        if (req.user.userId == -1 || req.user.userId == undefined || Number.isNaN(req.user.userId))
             throw new Error("User not authenticated");
 
         const expenseDetails = req.body;
@@ -30,7 +31,7 @@ export async function addExpense(req, res, next) {
         let paidBy = [];
         let currentUserShare = 0;
 
-        if (!isUserInGroup(expenseDetails.groupId, req.body.userId)) {
+        if (!isUserInGroup(expenseDetails.groupId, req.user.userId)) {
             throw new Error("can't add expense. user not part of this group");
         }
         //first: create the expense - and get the expense id
@@ -43,7 +44,7 @@ export async function addExpense(req, res, next) {
                         expenseDate: new Date(expenseDetails.expenseDate),
                         amount: expenseDetails.totalAmount,
                         currencyId: expenseDetails.currencyId,
-                        createdBy: expenseDetails.userId,
+                        createdBy: req.user.userId,
                         groupId: expenseDetails.groupId
                     }
                 });

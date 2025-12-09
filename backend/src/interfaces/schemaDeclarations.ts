@@ -33,14 +33,13 @@ export const jwtTokenUserSchema = zod.object({
 
 export const groupUserSchema = zod.strictObject({
     groupName: zod.string().min(1).max(50),
-    groupType: zod.number(),
-    userId: zod.number()
+    groupType: zod.number()
 });
 
 export const userDetailsSchema = zod.object({
-    userId: zod.string(),
+    userId: zod.bigint(),
     email: zod.string().email(),
-    firstName: zod.string().min(1).max(50),
-    lastName: zod.string().max(50).optional(),
+    firstname: zod.string().min(1).max(50),
+    lastname: zod.string().max(50).optional(),
     currencyName: zod.string()
 });

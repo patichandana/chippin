@@ -6,7 +6,7 @@ export async function addUsersToGroup(req, res, next) {
     try {
         //query should be like check if user is part of the group first
         //then make one query per user id in the users 
-        const userId = req.body.userId;
+        const userId = req.user.userId;
         const groupId = BigInt(req.params.group_id);
         const userIds = req.body.users.map(id => BigInt(id));
 

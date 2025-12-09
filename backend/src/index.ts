@@ -13,14 +13,18 @@ import { getCurrencies } from './routes/expenses/getCurrencies.js';
 import { getGroupDetails } from './routes/groups/getGroupDetails.js';
 import { addUsersToGroupByEmail } from './routes/groups/users/addUsersToGroupByEmail.js';
 
-const app = express();
+const app = express(); //app is the backend server
 
-app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'Cookie']
-    }));
+// since we were running frontend and backend on different ports during development, we needed to enable CORS
+// however now, we are using caddy as a reverse proxy, so frontend and backend appear to be on the same origin
+// hence, we can disable CORS.
+// Uncomment the below code if you are running frontend and backend on different origins
+// app.use(
+//     cors({ // cross origin resource sharing
+//         origin: "http://localhost:5173",
+//         credentials: true,
+//         allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'Cookie']
+//     }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,7 +39,10 @@ app.use((req, res, next) => {
     const userId = Number(authenticateRequest(req, res));
 
     if (userId != -1) {
-        req.body["userId"] = userId;
+        // console.log("req.user before assigning userId:", req.user);
+        // req.body["userId"] = userId;
+        req.user = {userId};
+        console.log("req.user after assigning userId:", req.user);
         next();
     }
 })

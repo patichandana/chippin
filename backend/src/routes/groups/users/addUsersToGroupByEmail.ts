@@ -7,7 +7,7 @@ export async function addUsersToGroupByEmail(req, res, next) {
     try {
         //query should be like check if user is part of the group first
         //then make one query per user id in the users 
-        const userId = req.body.userId;
+        const userId = req.user.userId;
         const groupId = BigInt(req.params.group_id);
         const userEmails = req.body.emails; // array of user emails
 
