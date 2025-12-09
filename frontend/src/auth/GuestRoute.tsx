@@ -8,6 +8,7 @@ export function GuestRoute({ children }: { children: JSX.Element }) {
 
   // If user is logged in → redirect them to dashboard
   if (isLoggedIn) {
+    console.log("GuestRoute - User is logged in, redirecting to /dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
