@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "build-css": "npx tailwindcss build -i src/tailwind.css -o output.css",
     "watch-css": "npx tailwindcss build -i src/tailwind.css -o output.css --watch",
-    "dev": "concurrently \"npm run watch-css\" \"npm start\" "
+    "dev": "concurrently \"npm run watch-css\" \"vite\" "
   },
   "dependencies": {
     "lucide-react": "^0.552.0",
