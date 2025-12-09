@@ -5,16 +5,45 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 import { CreateExpense } from "./pages/CreateExpense";
 import { CreateGroup } from "./pages/CreateGroup";
+import { GuestRoute } from "./auth/GuestRoute";
+import { ProtectedRoute } from "./auth/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/create-expense" element={<CreateExpense />} />
-      <Route path="/create-group" element={<CreateGroup />} />
+      { /* Public Routes */ }
+      <Route path="/" element={
+        <GuestRoute>
+          <LandingPage />
+        </GuestRoute>
+        } />
+      <Route path="/login" element={
+        <GuestRoute>
+          <LoginPage />
+        </GuestRoute>
+        } />
+      <Route path="/signup" element={
+        <GuestRoute>
+          <SignupPage />
+        </GuestRoute>
+          } />
+
+      { /* Protected Routes */ }
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <DashboardPage />
+        </ProtectedRoute>
+        } />
+      <Route path="/create-expense" element={
+        <ProtectedRoute>
+          <CreateExpense />
+        </ProtectedRoute>
+          } />
+      <Route path="/create-group" element={
+        <ProtectedRoute>
+          <CreateGroup />
+        </ProtectedRoute>
+        } />
       {/* Add other routes here as needed */}
     </Routes>
 
