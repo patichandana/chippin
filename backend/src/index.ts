@@ -6,12 +6,13 @@ import {addUsersToGroup} from "./routes/groups/users/addUsersToGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
 import { getCurrentUser } from './routes/users/getCurrentUser.js';
-import cors from "cors";
+// import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { addExpense } from './routes/expenses/addExpense.js';
 import { getCurrencies } from './routes/expenses/getCurrencies.js';
 import { getGroupDetails } from './routes/groups/getGroupDetails.js';
 import { addUsersToGroupByEmail } from './routes/groups/users/addUsersToGroupByEmail.js';
+import { logout } from './routes/auth/logout.js';
 
 const app = express(); //app is the backend server
 
@@ -43,8 +44,8 @@ app.use((req, res, next) => {
         // req.body["userId"] = userId;
         req.user = {userId};
         console.log("req.user after assigning userId:", req.user);
-        next();
     }
+    next();
 })
 
 app.post('/groups', addGroup);
@@ -60,6 +61,8 @@ app.get('/user',getCurrentUser);
 app.post('/expense', addExpense);
 
 app.get('/currencies', getCurrencies);
+
+app.post('/logout', logout);
 
 app.use(handleErrors);
 
