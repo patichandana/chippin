@@ -1,11 +1,7 @@
-// type GroupMember = {
-//     userId : number,
-// }
 
 type Group = {
     groupName : string,
     groupType : number,
-    // groupMembers ?: Array<GroupMember>
 }
 
 export async function createGroup (group: Group){
@@ -16,5 +12,5 @@ export async function createGroup (group: Group){
         },
         body: JSON.stringify(group)
     });
-    return response;
+    return response.json();
 }

@@ -6,20 +6,26 @@ import {addUsersToGroup} from "./routes/groups/users/addUsersToGroup.js"
 import { authenticateRequest } from "./routes/auth/authenticateRequest.js";
 import { handleErrors } from './routes/handleErrors.js';
 import { getCurrentUser } from './routes/users/getCurrentUser.js';
-import cors from "cors";
+// import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { addExpense } from './routes/expenses/addExpense.js';
 import { getCurrencies } from './routes/expenses/getCurrencies.js';
 import { getGroupDetails } from './routes/groups/getGroupDetails.js';
+import { addUsersToGroupByEmail } from './routes/groups/users/addUsersToGroupByEmail.js';
+import { logout } from './routes/auth/logout.js';
 
-const app = express();
+const app = express(); //app is the backend server
 
-app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'Cookie']
-    }));
+// since we were running frontend and backend on different ports during development, we needed to enable CORS
+// however now, we are using caddy as a reverse proxy, so frontend and backend appear to be on the same origin
+// hence, we can disable CORS.
+// Uncomment the below code if you are running frontend and backend on different origins
+// app.use(
+//     cors({ // cross origin resource sharing
+//         origin: "http://localhost:5173",
+//         credentials: true,
+//         allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'Cookie']
+//     }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -34,9 +40,12 @@ app.use((req, res, next) => {
     const userId = Number(authenticateRequest(req, res));
 
     if (userId != -1) {
-        req.body["userId"] = userId;
-        next();
+        // console.log("req.user before assigning userId:", req.user);
+        // req.body["userId"] = userId;
+        req.user = {userId};
+        console.log("req.user after assigning userId:", req.user);
     }
+    next();
 })
 
 app.post('/groups', addGroup);
@@ -45,11 +54,15 @@ app.get('/groups/:group_id', getGroupDetails);
 
 app.post('/groups/:group_id/users', addUsersToGroup);
 
+app.post('/groups/:group_id/emails', addUsersToGroupByEmail);
+
 app.get('/user',getCurrentUser);
 
 app.post('/expense', addExpense);
 
 app.get('/currencies', getCurrencies);
+
+app.post('/logout', logout);
 
 app.use(handleErrors);
 

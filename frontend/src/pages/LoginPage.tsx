@@ -7,8 +7,9 @@ import FlexMainDiv from "../components/ui/FlexMainDiv";
 import FlexNavBar from "../components/ui/FlexNavBar";
 import { useNavigate } from "react-router-dom";
 // import { set } from "zod";
+import { useAuth } from "../auth/useAuth";
 
-async function handleSubmit(e: FormEvent, navigate: (path: string) => void, setMessage: (msg: string) => void) {
+async function handleSubmit(e: FormEvent, navigate: (path: string) => void, setMessage: (msg: string) => void, refreshUser: () => Promise<void>) {
   e.preventDefault();
   const formData = new FormData(e.target as HTMLFormElement);
   const formEntries = Object.fromEntries(formData.entries());
@@ -16,10 +17,12 @@ async function handleSubmit(e: FormEvent, navigate: (path: string) => void, setM
     const response = await login(formEntries.email as string, formEntries.password as string);
     console.log(response.json());
     //navigate the user to dashboard, or throw error based on the req. response.
-    setMessage("Logging you in...");
-    setTimeout(() => {
+
+    if (response.ok) {
+      setMessage("Logging you in...");
+      await refreshUser();   // <-- THIS UPDATES AuthProvider.user
       navigate("/dashboard");
-    }, 2000);
+    }
   } catch (err) {
     console.error("Login failed:", err);
   }
@@ -29,6 +32,7 @@ async function handleSubmit(e: FormEvent, navigate: (path: string) => void, setM
 export default function LoginPage() {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const { refreshUser } = useAuth(); // import useAuth
   return (
     <FlexMainDiv>
       <FlexNavBar />
@@ -40,7 +44,7 @@ export default function LoginPage() {
       <main className="flex flex-grow justify-center items-center">
         <Card className="w-full max-w-xl sm:w-full" title="Log in">
           {/* <p className="text-3xl font-light my-4">Log in</p> */}
-          <form onSubmit={(e) => handleSubmit(e, navigate, setMessage)}>
+          <form onSubmit={(e) => handleSubmit(e, navigate, setMessage,refreshUser)}>
             <TextInput
               className="w-full required"
               type="email"

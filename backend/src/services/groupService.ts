@@ -1,6 +1,6 @@
 import { prisma } from "../db/connectDB.js"
 
-export async function isUserInGroup(groupId: number, userId: number) {
+export async function isUserInGroup(groupId: bigint, userId: bigint) {
     try {
         const membership = await prisma.groupMembers.findFirst({
             where: {

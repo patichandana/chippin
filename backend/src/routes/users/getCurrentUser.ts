@@ -5,7 +5,7 @@ import { parseObject } from "../../utils/commonUtil.js";
 
 export async function getCurrentUser(req, res, next) {
     try {
-        const userId = req.body.userId;
+        const userId = req.user.userId;
         if (!userId) {
             throw new ErrorResponse("USER_NOT_AUTHENTICATED", 401, "User not authenticated","No userId found in request body");
             }
@@ -29,7 +29,8 @@ export async function getCurrentUser(req, res, next) {
         if (userRecord) {
             userRecord["currencyName"] = userRecord.fk_currency.currencyName;
             delete userRecord["fk_currency"];
-            res.send(parseObject(userRecord));
+            const response = userDetailsSchema.parse(userRecord);
+            res.send(parseObject(response));
         } else {
             throw new ErrorResponse("USER_NOT_FOUND", 404, "User not found", "No user found with the given userId");
         }

@@ -7,13 +7,14 @@ import { parseObject } from "../../utils/commonUtil.js";
 export async function addGroup(req, res, next) {
     try {
         const groupDetails = groupUserSchema.parse(req.body);
+        const userId = req.user.userId;
 
         const groupDBRecord = await prisma.$transaction(async () => {
             const group = await prisma.groups.create({
                 data: {
                     groupName: groupDetails.groupName,
                     groupType: groupDetails.groupType,
-                    createdBy: groupDetails.userId
+                    createdBy: userId
                 }
             });
             await prisma.groupMembers.create({

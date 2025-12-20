@@ -7,10 +7,8 @@ export default function MySideNavBar({ isOpen}:{ isOpen?: boolean}) {
 
   const links = [
     { to: "/dashboard", label: "Dashboard" },
-    { to: "/notifications", label: "Notifications" },
     { to: "/create-expense", label: "Expenses" },
     { to: "/create-group", label: "Groups" },
-    { to: "/friends", label: "Friends" },
   ];
 
   return (
