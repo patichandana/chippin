@@ -4,7 +4,7 @@ import { ErrorResponse, genericErrorMessages } from "../../interfaces/ErrorHandl
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-export const authenticateRequest = (req, res) => {
+export const authenticateRequest = (req, res, next) => {
     try {
         const jwtToken = req.cookies?.Authorization ?? null;
 
@@ -21,9 +21,11 @@ export const authenticateRequest = (req, res) => {
             //     "message": "user not logged in",
             //     "suggestion": "please authenticate"
             // });
-            // return -1;
         }
     } catch(err) {
-        
+        // return -1;
+        next(err);
     }
+
+    return -1;
 }

@@ -37,15 +37,19 @@ app.post('/signup', signup);
 app.post('/login', login);
 
 app.use((req, res, next) => {
-    const userId = Number(authenticateRequest(req, res));
+    const userId = Number(authenticateRequest(req, res, next));
 
-    if (userId != -1) {
-        // console.log("req.user before assigning userId:", req.user);
-        // req.body["userId"] = userId;
-        req.user = {userId};
-        console.log("req.user after assigning userId:", req.user);
+    try {
+        if (userId != -1) {
+            // console.log("req.user before assigning userId:", req.user);
+            // req.body["userId"] = userId;
+            req.user = { userId };
+            console.log("req.user after assigning userId:", req.user);
+            next();
+        }
+    } catch(err) {
+        next(err);
     }
-    next();
 })
 
 app.post('/groups', addGroup);
