@@ -6,8 +6,8 @@ import { parseObject } from "../../utils/commonUtil.js";
 export async function getCurrentUser(req, res, next) {
     try {
         const userId = req.user.userId;
-        if (!userId) {
-            throw new ErrorResponse("USER_NOT_AUTHENTICATED", 401, "User not authenticated","No userId found in request body");
+        if (userId === undefined || userId === null || userId === -1n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
             }
         const userRecord = await prisma.users.findUnique({
             where: {
@@ -32,7 +32,7 @@ export async function getCurrentUser(req, res, next) {
             const response = userDetailsSchema.parse(userRecord);
             res.send(parseObject(response));
         } else {
-            throw new ErrorResponse("USER_NOT_FOUND", 404, "User not found", "No user found with the given userId");
+            throw ErrorResponse.errorFromCode("USER_NOT_FOUND");
         }
     } catch (err) {
         next(err);

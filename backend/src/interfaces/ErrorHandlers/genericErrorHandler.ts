@@ -30,6 +30,11 @@ export const genericErrorMessages = {
         message: "error validating user",
         status: 500,
         details: "user hasn't logged in"
+    },
+    USER_NOT_FOUND: {
+        message: "user not found",
+        status: 404,
+        details: "no user found with the given userId"
     }
 }
 
@@ -45,6 +50,11 @@ export class ErrorResponse extends Error {
         this.status = status;
         this.message = message;
         this.details = details;
+    }
+
+    static errorFromCode(errorCode: string): ErrorResponse {
+        const errorInfo = genericErrorMessages[errorCode];
+        return new ErrorResponse(errorCode, errorInfo.status, errorInfo.message, errorInfo.details);
     }
 
     getErrorCode() {

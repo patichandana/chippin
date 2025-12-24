@@ -13,10 +13,11 @@ export const authenticateRequest = (req, res) => {
                 const a = jwtTokenUserSchema.parse(jwt.verify(jwtToken, JWT_SECRET_KEY));
                 return a.userId;
             } catch (err) {
-                throw new ErrorResponse("INVALID_JWT", 500, genericErrorMessages["INVALID_JWT"].message, genericErrorMessages["INVALID_JWT"].details);
+                throw ErrorResponse.errorFromCode("INVALID_JWT");
+    
             }
         } else {
-            throw new ErrorResponse("NO_AUTH_HEADER", 500, genericErrorMessages["NO_AUTH_HEADER"].message, genericErrorMessages["NO_AUTH_HEADER"].details);
+            throw ErrorResponse.errorFromCode("NO_AUTH_HEADER");
             //     "name": "noAuthHeader",
             //     "message": "user not logged in",
             //     "suggestion": "please authenticate"
