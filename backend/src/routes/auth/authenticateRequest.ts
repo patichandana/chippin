@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { jwtTokenUserSchema } from "../../interfaces/schemaDeclarations.js";
-import { ErrorResponse, genericErrorMessages } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
+import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
