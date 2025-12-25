@@ -20,8 +20,8 @@ export default function DashboardPage
               {/* You Owe */}
               <div className="flex flex-col 
                   lg:flex-row lg:gap-4
-                  p-4 flex-1 rounded-xl bg-gray-700 shadow-lg">
-                    <span className="text-sm md:text-base lg:text-2xl text-gray-300">You Owe</span>
+                  p-4 flex-1 rounded-xl bg-gray-600 shadow-lg">
+                    <span className="text-sm md:text-base lg:text-2xl text-gray-100">You Owe</span>
                     <span className="text-3xl md:text-4xl 
                     lg:text-5xl lg:flex-1 lg:text-center
                    font-semibold text-gray-50 tracking-tight">₹1,250</span>

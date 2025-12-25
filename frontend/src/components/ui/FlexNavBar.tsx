@@ -24,11 +24,11 @@ export default function FlexNavBar({ toggleSidebar }: { toggleSidebar?: () => vo
     if (loading) return null;
 
     return (
-        <header className="flex items-center p-2 h-14 bg-gray-700 flex-shrink-0">
+        <header className="flex items-center p-2 h-14 bg-slate-700 flex-shrink-0">
 
             {/* LEFT SECTION */}
             {isLoggedIn && (
-                <button onClick={toggleSidebar} className="text-white">
+                <button onClick={toggleSidebar} className="text-white hover:bg-slate-600">
                     <Menu />
                 </button>
             )}
