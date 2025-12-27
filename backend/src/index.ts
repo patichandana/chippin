@@ -37,10 +37,10 @@ app.post('/signup', signup);
 app.post('/login', login);
 
 app.use((req, res, next) => {
-    const userId = Number(authenticateRequest(req, res, next));
+    const userId = BigInt(authenticateRequest(req, res, next));
 
     try {
-        if (userId != -1) {
+        if (userId != -1n) {
             // console.log("req.user before assigning userId:", req.user);
             // req.body["userId"] = userId;
             req.user = { userId };

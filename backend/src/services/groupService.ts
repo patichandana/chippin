@@ -4,7 +4,7 @@ import { ErrorResponse } from "../interfaces/ErrorHandlers/genericErrorHandler.j
 export async function isUserInGroup(groupId: bigint, userId: bigint) { // is userId supposed to be bigint? or Number?
     try {
         // userID validation
-        if (userId == null || Number.isNaN(userId) || !Number.isInteger(userId) ) {
+        if (typeof userId !== "bigint" || userId <= 0n) {
             throw ErrorResponse.errorFromCode("INVALID_JWT");
         }
 

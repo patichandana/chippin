@@ -1,5 +1,5 @@
 type ExpenseShare = {
-    userId : number,
+    userId : bigint,
     paidAmount : number,
     owedAmount : number
 }

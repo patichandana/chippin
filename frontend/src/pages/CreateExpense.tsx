@@ -34,7 +34,7 @@ export function CreateExpense() {
       expenseShares: [
         {
           //need to get the user id
-          userId: 1,
+          userId: 1n,
           paidAmount: Number(formEntries.totalAmount),
           owedAmount: 0
         },
