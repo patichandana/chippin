@@ -25,3 +25,16 @@ export async function isUserInGroup(groupId: bigint, userId: bigint) { // is use
         return null;
     }
 }
+
+export async function addUsersToGroupByIds(
+    groupId: bigint,
+    userIds: bigint[]
+) {
+    return prisma.groupMembers.createMany({
+        data: userIds.map((userId) => ({
+            groupId,
+            memberId: userId
+        })),
+        skipDuplicates: true
+    });
+}

@@ -13,6 +13,8 @@ import { getCurrencies } from './routes/expenses/getCurrencies.js';
 import { getGroupDetails } from './routes/groups/getGroupDetails.js';
 import { addUsersToGroupByEmail } from './routes/groups/users/addUsersToGroupByEmail.js';
 import { logout } from './routes/auth/logout.js';
+import { getDashboardBalance } from './routes/dashboard/getDashboardBalance.js';
+import { get } from 'http';
 
 const app = express(); //app is the backend server
 
@@ -36,21 +38,7 @@ app.post('/signup', signup);
 //login
 app.post('/login', login);
 
-app.use((req, res, next) => {
-    const userId = BigInt(authenticateRequest(req, res, next));
-
-    try {
-        if (userId != -1n) {
-            // console.log("req.user before assigning userId:", req.user);
-            // req.body["userId"] = userId;
-            req.user = { userId };
-            console.log("req.user after assigning userId:", req.user);
-            next();
-        }
-    } catch(err) {
-        next(err);
-    }
-})
+app.use(authenticateRequest); //middleware to authenticate all requests below this line
 
 app.post('/groups', addGroup);
 
@@ -65,6 +53,8 @@ app.get('/user',getCurrentUser);
 app.post('/expense', addExpense);
 
 app.get('/currencies', getCurrencies);
+
+app.get('/dashboard/balance', getDashboardBalance);
 
 app.post('/logout', logout);
 

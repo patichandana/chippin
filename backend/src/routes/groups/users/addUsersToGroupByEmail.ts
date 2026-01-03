@@ -1,20 +1,29 @@
 import { prisma } from "../../../db/connectDB.js";
 import { GroupMemberError } from "../../../interfaces/ErrorHandlers/groupMemberErrorHandler.js";
-import { isUserInGroup } from "../../../services/groupService.js";
-import { addUsersToGroup } from "./addUsersToGroup.js";
+import { isUserInGroup, addUsersToGroupByIds } from "../../../services/groupService.js";
+import { Request, Response, NextFunction } from "express";
+import { ErrorResponse } from "../../../interfaces/ErrorHandlers/genericErrorHandler.js";
 
-export async function addUsersToGroupByEmail(req, res, next) {
+
+type AddUsersToGroupByEmailBody = {
+    emails: string[];
+};
+export async function addUsersToGroupByEmail(
+    req: Request<{group_id: string}, any, AddUsersToGroupByEmailBody>, res: Response, next: NextFunction) {
     try {
         //query should be like check if user is part of the group first
         //then make one query per user id in the users 
-        const userId = req.user.userId;
+        const user = req.user;
+        if (!user || user.userId === -1n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+        }
+        const userId = user.userId;
         const groupId = BigInt(req.params.group_id);
         const userEmails = req.body.emails; // array of user emails
 
         const userInGroup = await isUserInGroup(groupId, userId);
         if (!userInGroup) {
-            next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", "user not part of the group"));
-            return;
+            return next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", "user not part of the group"));
         }
 
         // Search if any emails do not exist in the users table
@@ -24,7 +33,8 @@ export async function addUsersToGroupByEmail(req, res, next) {
         });
 
         const foundEmails = users.map(user => user.email);
-        const invalidEmails = userEmails.filter(email => !foundEmails.includes(email));
+        const invalidEmails = userEmails.filter(
+            email => !foundEmails.includes(email));
         if(invalidEmails.length > 0) {
             return next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", 
                 `the following emails do not exist: ${invalidEmails.join(", ")}. Please ensure all emails are registered and try again.`));
@@ -48,17 +58,19 @@ export async function addUsersToGroupByEmail(req, res, next) {
             const existingMemberEmails = users
                 .filter(user => existingMemberIds.includes(user.userId))
                 .map(user => user.email);
+
             return next(new GroupMemberError("ERROR_ADDING_GROUP_MEMBERS", 
                 `the following users are already members of the group: ${existingMemberEmails.join(", ")}.`));
         }
 
-        req.body.users = userIds; // replace emails with user IDs for further processing
+        const result = await addUsersToGroupByIds(groupId, userIds);
 
-        // Now call the existing function to add users by their IDs
-        return addUsersToGroup(req, res, next);
-
+        res.send({
+            status: "Success",
+            groupMembers: result
+        });
         
     } catch (e) {
-        next();
+        next(e);
     }
 }

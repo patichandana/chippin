@@ -1,4 +1,3 @@
-import { ZodError } from "zod";
 import { ErrorResponse } from "./genericErrorHandler.js";
 
 export const GroupErrorObject = {

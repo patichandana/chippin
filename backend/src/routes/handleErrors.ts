@@ -1,21 +1,23 @@
+import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { ErrorResponse } from "../interfaces/ErrorHandlers/genericErrorHandler.js";
+// import { Request, Response, NextFunction } from "express";
 
-export const handleErrors = (err, req, res, next) => {
+export const handleErrors:ErrorRequestHandler = (err:unknown, req:Request, res:Response, next:NextFunction): void => {
 
     if (err instanceof ErrorResponse) {
         const statusCode = err.getResponseStatus();
         const errorBody = err.getResponseErrorObject();
 
         res.status(statusCode).send(errorBody);
-    } else {
-        if (err.type == "entity.parse.failed") {
-            res.status(err.statusCode).send({
-                errorCode: "INVALID_PAYLOAD",
-                message: "enter valid payload"
-            })
-        }
-            res.status(400).send(err)
+        return;
+    } 
+    if (typeof err === "object" && err !== null && (err as any).type === "entity.parse.failed") {
+        res.status(400).send({
+            errorCode: "INVALID_PAYLOAD",
+            message: "enter valid payload"
+        });
+        return;
     }
+            res.status(400).send(err);
 
-    return 1;
 }

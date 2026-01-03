@@ -4,12 +4,18 @@ import jwt from "jsonwebtoken";
 import { LoginError } from "../../interfaces/ErrorHandlers/loginErrorHandler.js";
 import { loginUserSchema } from "../../interfaces/schemaDeclarations.js";
 import { ZodError } from "zod";
+import { Request, Response, NextFunction } from "express";
+import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-export async function login(req, res, next) {
+
+export async function login(req: Request, res: Response, next: NextFunction) {
 
     try {
+        const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+        if(!JWT_SECRET_KEY){
+            throw ErrorResponse.errorFromCode("SERVER_MISCONFIGURED");
+        }
         const loginUser = loginUserSchema.parse(req.body)
 
         const dbUserRecord = await prisma.users.findFirstOrThrow({
@@ -28,26 +34,22 @@ export async function login(req, res, next) {
             const jwtToken = jwt.sign(jwtPayload, JWT_SECRET_KEY, { expiresIn: '8h' });
             
             // res.header('Set-Cookie', `Authorization=Bearer ${jwtToken}`)
-            res.cookie('Authorization', jwtToken, { path: "/", httpOnly: true, secure: false, sameSite: "Lax" })
+            res.cookie('Authorization', jwtToken, { path: "/", httpOnly: true, secure: false, sameSite: "lax" })
 
             res.send({
                 "status": "success",
                 "token": jwtToken
             })
         } else {
-            next(new LoginError("INVALID_PASSWORD", "passwords don't match"), req, res);
+            next(new LoginError("INVALID_PASSWORD", "passwords don't match"));
         }
     } catch (err) {
         if (err instanceof ZodError) {
-            const e = LoginError.formatZodError(err);
-            switch (e.code) {
-                case 'ERROR_PARSING_EMAIL': {
-                    next(new LoginError("ERROR_PARSING_EMAIL", e.details), req, res);
-                    break;
-                }
-            }
+            const e = ErrorResponse.formatZodError(err);
+            next(ErrorResponse.errorFromCode(e.code));
+            return; 
         } else {
-            next(new LoginError("INVALID_PASSWORD", "error logging in. Please reach out to admin"), req, res);
+            next(new LoginError("INVALID_PASSWORD", "error logging in. Please reach out to admin"));
         }
     }
 }

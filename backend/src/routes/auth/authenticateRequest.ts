@@ -1,32 +1,36 @@
 import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 import { jwtTokenUserSchema } from "../../interfaces/schemaDeclarations.js";
 import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+if(!JWT_SECRET_KEY){
+    throw ErrorResponse.errorFromCode("SERVER_MISCONFIGURED");
+}
 
-export const authenticateRequest = (req, res, next) => {
+export const authenticateRequest = (req: Request, res: Response, next: NextFunction) => {
     try {
         const jwtToken = req.cookies?.Authorization ?? null;
 
-        if (jwtToken) {
-            try {
-                const a = jwtTokenUserSchema.parse(jwt.verify(jwtToken, JWT_SECRET_KEY));
-                return a.userId;
-            } catch (err) {
-                throw ErrorResponse.errorFromCode("INVALID_JWT");
-    
-            }
-        } else {
+        if (!jwtToken) {
             throw ErrorResponse.errorFromCode("NO_AUTH_HEADER");
-            //     "name": "noAuthHeader",
-            //     "message": "user not logged in",
-            //     "suggestion": "please authenticate"
-            // });
+        }
+
+        try {
+            const parsed = jwtTokenUserSchema.parse(jwt.verify(jwtToken, JWT_SECRET_KEY));
+
+            req.user = {
+                userId: BigInt(parsed.userId),
+                email: parsed.email
+            };
+            console.log("Authenticated user:", req.user);
+            next();
+        } catch (err) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+
         }
     } catch(err) {
         // return -1;
         next(err);
     }
-
-    return -1;
 }

@@ -1,7 +1,8 @@
 import { prisma } from "../../db/connectDB.js";
 import { isUserInGroup } from "../../services/groupService.js"
 import { parseObject } from "../../utils/commonUtil.js";
-
+import { Request, Response, NextFunction } from "express";
+import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 /*
 {
     name:
@@ -27,17 +28,21 @@ import { parseObject } from "../../utils/commonUtil.js";
  }
 */
 
-export async function getGroupDetails(req, res, next) {
+export async function getGroupDetails(req: Request, res: Response, next: NextFunction) {
     try {
         const groupId = BigInt(req.params.group_id);
-        const userId = BigInt(req.user.userId);
+        const user = req.user;
+        if (!user || user.userId === -1n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+        }
+        const userId = user.userId;
         //security: need to check if the user is in the group.
         const userInGroup = await isUserInGroup(groupId, userId);
         if(!userInGroup) {
             throw new Error("user not in group");
         }
         if (groupId && userInGroup) {
-            let groupDetails = await prisma.groups.findUnique({
+            const groupDetails = await prisma.groups.findUnique({
                 relationLoadStrategy: 'join',
                 include: {
                     expenses: true,
@@ -48,15 +53,17 @@ export async function getGroupDetails(req, res, next) {
                 }
             });
 
-            const groupMembers = [];
-            for(const tempMember of groupDetails?.groupMembers) {
-                groupMembers.push(tempMember.memberId);
+            if(!groupDetails) {
+                throw new Error("GROUP_NOT_FOUND");
             }
 
-            groupDetails.groupMembers = groupMembers;
-            res.send(parseObject(groupDetails));
+            const response = {
+            ...groupDetails,
+            groupMembers: groupDetails.groupMembers.map(m => m.memberId)
+        };
+            res.send(parseObject(response));
         }
     } catch (err) {
-        next(err, req, res);
+        next(err);
     }
 }
