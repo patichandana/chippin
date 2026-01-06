@@ -65,7 +65,10 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             if(!groupDetails) {
                 throw new Error("GROUP_NOT_FOUND");
             }
-
+            const groupMembers = [];
+            for(const tempMember of groupDetails?.groupMembers) {
+                groupMembers.push(tempMember.memberId);
+            }
             groupDetails.groupMembers = groupMembers;
 
             //adding userFullName in the expenseShares object, and removing the fk_user foreign object
