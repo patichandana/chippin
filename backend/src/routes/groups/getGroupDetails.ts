@@ -45,7 +45,16 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             const groupDetails = await prisma.groups.findUnique({
                 relationLoadStrategy: 'join',
                 include: {
-                    expenses: true,
+                    expenses: {
+                        include: {
+                            expenseShares: {
+                                include: { fk_user: true},
+                                omit: {
+                                    expenseId: true,
+                                }
+                            }
+                        }
+                    },
                     groupMembers: true
                 },
                 where: {
@@ -57,11 +66,20 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
                 throw new Error("GROUP_NOT_FOUND");
             }
 
-            const response = {
-            ...groupDetails,
-            groupMembers: groupDetails.groupMembers.map(m => m.memberId)
-        };
-            res.send(parseObject(response));
+            groupDetails.groupMembers = groupMembers;
+
+            //adding userFullName in the expenseShares object, and removing the fk_user foreign object
+
+            for(const expense of groupDetails.expenses) {
+                for(let expenseShare of expense.expenseShares) {
+                     let share: any = expenseShare;
+                    share.userFullName = `${share.fk_user.firstname} ${share.fk_user.lastname}`;
+                    delete share.fk_user; 
+                    expenseShare = share;
+                }
+                
+            }
+            res.send(parseObject(groupDetails));
         }
     } catch (err) {
         next(err);

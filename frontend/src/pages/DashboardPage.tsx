@@ -17,10 +17,10 @@ export default function DashboardPage
   
   return (
     <div className="flex flex-col min-h-screen">
-      <FlexNavBar toggleSidebar={() => setIsOpen(!isOpen)}/>
-      
+      <FlexNavBar toggleSidebar={() => setIsOpen(!isOpen)} />
+
       <div className="flex flex-1">
-        <MySideNavBar isOpen={isOpen}/>
+        <MySideNavBar isOpen={isOpen} />
         <main className="flex-1 bg-gray-50 p-4">
           <Card className="flex flex-col">
 
@@ -37,6 +37,5 @@ export default function DashboardPage
     </div>
     // <FlexNavBar />
     // < MySideNavBar />
-    
   );
 }
