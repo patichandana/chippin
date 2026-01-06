@@ -1,6 +1,6 @@
 // import DashboardLayout from "../layouts/DashboardLayout";
 // import SideNavbar from "../components/ui/SideNavBar";
-import MySideNavBar from "../components/ui/MySideNavBar";
+import MySideNavBar from "../components/ui/SideNavBar";
 import FlexNavBar from "../components/ui/FlexNavBar";
 import { useState } from "react";
 import Card from "../components/ui/Card";

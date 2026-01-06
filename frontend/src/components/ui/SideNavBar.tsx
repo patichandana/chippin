@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 // import { useState } from "react";
 
-export default function MySideNavBar({ isOpen}:{ isOpen?: boolean}) {
+export default function SideNavBar({ isOpen}:{ isOpen?: boolean}) {
   // const [isOpen, setIsOpen] = useState(false);
   // const toggleNavbar = () => setIsOpen(!isOpen);
 
