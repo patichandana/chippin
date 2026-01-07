@@ -17,4 +17,16 @@
 
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
+export const prisma = new PrismaClient().$extends({
+    result: {
+        users: {
+            userFullName: {
+                needs: { firstname: true, lastname: true },
+                compute(user) {
+                    return `${user.firstname} ${user.lastname}`
+                }
+            }
+        }
+    }
+}
+);
