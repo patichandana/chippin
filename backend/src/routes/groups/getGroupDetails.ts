@@ -55,7 +55,11 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
                             }
                         }
                     },
-                    groupMembers: true
+                    groupMembers: {
+                        include: {
+                            fk_member: true
+                        }
+                    }
                 },
                 where: {
                     groupId: groupId
@@ -65,24 +69,34 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             if(!groupDetails) {
                 throw new Error("GROUP_NOT_FOUND");
             }
-            const groupMembers = [];
+
+            let groupDetailsResponse: any = groupDetails;
+
+            const groupMembers = {};
             for(const tempMember of groupDetails?.groupMembers) {
-                groupMembers.push(tempMember.memberId);
+                groupMembers[Number(tempMember.memberId) ] = {
+                    userFullName: tempMember.fk_member.userFullName,
+                    profilePic: "https://marketplace.canva.com/EAFqNrAJpQs/2/0/1600w/canva-neutral-pink-modern-circle-shape-linkedin-profile-picture-nHZ1TkZ0aGk.jpg"
+                };
             }
-            groupDetails.groupMembers = groupMembers;
+
+            groupDetailsResponse.groupMembers = groupMembers;
 
             //adding userFullName in the expenseShares object, and removing the fk_user foreign object
 
-            for(const expense of groupDetails.expenses) {
+            for (const expense of groupDetailsResponse.expenses) {
+                let modifiedExpense: any = expense;
+                const paidBy = [];
+
                 for(let expenseShare of expense.expenseShares) {
-                     let share: any = expenseShare;
-                    share.userFullName = `${share.fk_user.firstname} ${share.fk_user.lastname}`;
-                    delete share.fk_user; 
-                    expenseShare = share;
+                    delete expenseShare.fk_user;
+                    if (expenseShare.paidAmount > 0) paidBy.push(expenseShare.userId)
                 }
-                
+
+                modifiedExpense.paidBy = paidBy;
             }
-            res.send(parseObject(groupDetails));
+
+            res.send(parseObject(groupDetailsResponse));
         }
     } catch (err) {
         next(err);
