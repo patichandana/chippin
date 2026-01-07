@@ -71,8 +71,13 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             }
 
             let groupDetailsResponse: any = groupDetails;
-
-            const groupMembers = {};
+            type GroupMemberMap = {
+                [memberId: number]: {
+                userFullName: string;
+                profilePic: string;
+                };
+            };
+            const groupMembers: GroupMemberMap = {};
             for(const tempMember of groupDetails?.groupMembers) {
                 groupMembers[Number(tempMember.memberId) ] = {
                     userFullName: tempMember.fk_member.userFullName,
