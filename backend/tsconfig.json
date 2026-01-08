@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "strict": false,
+    "strict": true,
     "module": "NodeNext",
     "rootDir": ".",
     "target": "ES2022",

@@ -1,7 +1,17 @@
 import { prisma } from "../db/connectDB.js"
+import { ErrorResponse } from "../interfaces/ErrorHandlers/genericErrorHandler.js";
 
-export async function isUserInGroup(groupId: bigint, userId: bigint) {
+export async function isUserInGroup(groupId: bigint, userId: bigint) { // is userId supposed to be bigint? or Number?
     try {
+        // userID validation
+        if (typeof userId !== "bigint" || userId <= 0n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+        }
+
+        // groupID validation
+        if (groupId == -1n || groupId == null || groupId == undefined || Number.isNaN(Number(groupId))) {
+            return true;
+        }
         const membership = await prisma.groupMembers.findFirst({
             where: {
                 groupId: groupId,
@@ -14,4 +24,17 @@ export async function isUserInGroup(groupId: bigint, userId: bigint) {
         //todo : proper error handling
         return null;
     }
+}
+
+export async function addUsersToGroupByIds(
+    groupId: bigint,
+    userIds: bigint[]
+) {
+    return prisma.groupMembers.createMany({
+        data: userIds.map((userId) => ({
+            groupId,
+            memberId: userId
+        })),
+        skipDuplicates: true
+    });
 }

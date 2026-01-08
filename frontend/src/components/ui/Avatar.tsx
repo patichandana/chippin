@@ -2,7 +2,7 @@ import { createAvatar } from "@dicebear/core";
 import { funEmoji } from "@dicebear/collection";
 
 interface AvatarProps {
-  seed: string;        // userId, username, email
+  seed: string;        // username, email
   size?: number;       // optional size override
   className?: string;  // extra CSS if needed
 }

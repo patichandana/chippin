@@ -1,7 +1,8 @@
 import { prisma } from "../../db/connectDB.js";
 import { isUserInGroup } from "../../services/groupService.js"
 import { parseObject } from "../../utils/commonUtil.js";
-
+import { Request, Response, NextFunction } from "express";
+import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 /*
 {
     name:
@@ -27,17 +28,21 @@ import { parseObject } from "../../utils/commonUtil.js";
  }
 */
 
-export async function getGroupDetails(req, res, next) {
+export async function getGroupDetails(req: Request, res: Response, next: NextFunction) {
     try {
         const groupId = BigInt(req.params.group_id);
-        const userId = BigInt(req.user.userId);
+        const user = req.user;
+        if (!user || user.userId === -1n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+        }
+        const userId = user.userId;
         //security: need to check if the user is in the group.
         const userInGroup = await isUserInGroup(groupId, userId);
         if(!userInGroup) {
             throw new Error("user not in group");
         }
         if (groupId && userInGroup) {
-            let groupDetails = await prisma.groups.findUnique({
+            const groupDetails = await prisma.groups.findUnique({
                 relationLoadStrategy: 'join',
                 include: {
                     expenses: {
@@ -61,9 +66,18 @@ export async function getGroupDetails(req, res, next) {
                 }
             });
 
-            let groupDetailsResponse: any = groupDetails;
+            if(!groupDetails) {
+                throw new Error("GROUP_NOT_FOUND");
+            }
 
-            const groupMembers = {};
+            let groupDetailsResponse: any = groupDetails;
+            type GroupMemberMap = {
+                [memberId: number]: {
+                userFullName: string;
+                profilePic: string;
+                };
+            };
+            const groupMembers: GroupMemberMap = {};
             for(const tempMember of groupDetails?.groupMembers) {
                 groupMembers[Number(tempMember.memberId) ] = {
                     userFullName: tempMember.fk_member.userFullName,
@@ -90,6 +104,6 @@ export async function getGroupDetails(req, res, next) {
             res.send(parseObject(groupDetailsResponse));
         }
     } catch (err) {
-        next(err, req, res);
+        next(err);
     }
 }

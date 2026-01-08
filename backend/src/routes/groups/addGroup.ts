@@ -2,12 +2,17 @@ import { groupUserSchema } from '../../interfaces/schemaDeclarations.js';
 import { prisma } from "../../db/connectDB.js";
 import { GroupErrorObject, GroupError } from "../../interfaces/ErrorHandlers/groupErrorHandler.js"
 import { parseObject } from "../../utils/commonUtil.js";
+import { Request, Response, NextFunction } from "express";
+import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandler.js";
 
-
-export async function addGroup(req, res, next) {
+export async function addGroup(req: Request, res: Response, next: NextFunction) {
     try {
         const groupDetails = groupUserSchema.parse(req.body);
-        const userId = req.user.userId;
+        const user = req.user;
+        if (!user || user.userId === -1n) {
+            throw ErrorResponse.errorFromCode("INVALID_JWT");
+        }
+        const userId = user.userId;
 
         const groupDBRecord = await prisma.$transaction(async () => {
             const group = await prisma.groups.create({
@@ -29,6 +34,6 @@ export async function addGroup(req, res, next) {
 
         res.send(parseObject(groupDBRecord));
     } catch(err) {
-        next(new GroupError("ERROR_CREATING_GROUP", null), req, res);
+        next(new GroupError("ERROR_CREATING_GROUP", "error creating group"));
     }
 }

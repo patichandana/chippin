@@ -20,7 +20,7 @@ export const signupUserSchema = zod.object({
 export const loginUserSchema = zod.object({
     email: zod.string().email(),
     username: zod.string().optional(),
-    password: zod.string().optional()
+    password: zod.string()
 }).refine(
     data => !!data.email ||  !!data.username,
     'either username or email must be provided'
