@@ -80,7 +80,7 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             const groupMembers: GroupMemberMap = {};
             for(const tempMember of groupDetails?.groupMembers) {
                 groupMembers[Number(tempMember.memberId) ] = {
-                    userFullName: tempMember.fk_member.userFullName,
+                    firstname: tempMember.fk_member.firstname,
                     profilePic: "https://marketplace.canva.com/EAFqNrAJpQs/2/0/1600w/canva-neutral-pink-modern-circle-shape-linkedin-profile-picture-nHZ1TkZ0aGk.jpg"
                 };
             }
@@ -92,12 +92,15 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             for (const expense of groupDetailsResponse.expenses) {
                 let modifiedExpense: any = expense;
                 const paidBy = [];
+                let userSumAmount = 0;
 
                 for(let expenseShare of expense.expenseShares) {
                     delete expenseShare.fk_user;
                     if (expenseShare.paidAmount > 0) paidBy.push(expenseShare.userId)
+                    if (expenseShare.userId == userId) userSumAmount = expenseShare.paidAmount - expenseShare.owedAmount;
                 }
 
+                modifiedExpense.userSumAmount = userSumAmount;
                 modifiedExpense.paidBy = paidBy;
             }
 
