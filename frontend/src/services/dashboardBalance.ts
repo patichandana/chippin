@@ -7,8 +7,8 @@
 // };
 
 export type DashboardBalance = {
-  totalGetsBack: number;
-  totalHasToPay: number;
+  getsBack: number;
+  hasToPay: number;
 }
 
 export async function getDashboardBalance(): Promise<DashboardBalance> {

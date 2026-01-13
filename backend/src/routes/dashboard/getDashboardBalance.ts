@@ -2,16 +2,14 @@ import { ErrorResponse } from "../../interfaces/ErrorHandlers/genericErrorHandle
 import { prisma } from "../../db/connectDB.js";
 import { Request, Response, NextFunction } from "express";
 
-export async function getDashboardBalance(req: Request, res: Response, next: NextFunction) {
+export async function getDashboardBalance(req: Request, res: Response) {
 
     const user = req.user;
-    if (!user || user.userId === -1n) {
+    if (!user || typeof user.userId !== "bigint" || user.userId <= 0n) {
         throw ErrorResponse.errorFromCode("INVALID_JWT");
     }
     const userId = user.userId;
-    if (typeof userId !== "bigint" || userId <= 0n) {
-                throw ErrorResponse.errorFromCode("INVALID_JWT");
-    }
+
     // Fetch total balance from the database
     const expenseShares = await prisma.expenseShares.findMany({
         where: {userId: userId, fk_expense: {isSettled: false}},
