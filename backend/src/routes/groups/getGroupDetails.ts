@@ -46,6 +46,7 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
                 relationLoadStrategy: 'join',
                 include: {
                     expenses: {
+                        where: { expenseStatus: "ACTIVE" },
                         include: {
                             expenseShares: {
                                 include: { fk_user: true},
