@@ -82,6 +82,7 @@ model Expenses {
   fk_currency_id Currencies @relation(fields: [currencyId],references: [currencyId])
   createdAt  DateTime  @default(now()) @db.Timestamptz(6) @map("created_at")
   expenseDate DateTime @default(now()) @db.Timestamptz(6) @map("expense_date")
+  updatedAt DateTime @default(now()) @updatedAt
   createdBy  BigInt @map("created_by")
   fk_user Users @relation(fields: [createdBy],references: [userId])
   isSettled Boolean @default(false) @map("is_settled")
