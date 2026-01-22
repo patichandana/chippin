@@ -54,18 +54,27 @@ export async function getExpenses(req: Request, res: Response) {
             throw new ExpenseError("USER_NOT_IN_GROUP", null);
         }
 
-        const expenses = await prisma.expenses.findMany({
-            where: {
-                expenseName: searchExpenseName ? { contains: searchExpenseName, mode: 'insensitive' } : undefined,
-                description: searchExpenseDescription ? { contains: searchExpenseDescription, mode: 'insensitive' } : undefined,
-                groupId: groupId,
-                createdBy: createdBy,
-                expenseDate: {
-                    gte: expenseCreatedStartDate ? new Date(expenseCreatedStartDate) : undefined,
-                    lte: expenseCreatedEndDate ? new Date(expenseCreatedEndDate) : undefined
-                },
-                expenseStatus: expenseStatus == "ACTIVE" || "INACTIVE" ? expenseStatus : undefined,
+        let where: any = {
+            groupId: groupId,
+            expenseName: searchExpenseName ? { contains: searchExpenseName, mode: 'insensitive' } : undefined,
+            description: searchExpenseDescription ? { contains: searchExpenseDescription, mode: 'insensitive' } : undefined,
+            createdBy: createdBy,
+            expenseDate: {
+                gte: expenseCreatedStartDate ? new Date(expenseCreatedStartDate) : undefined,
+                lte: expenseCreatedEndDate ? new Date(expenseCreatedEndDate) : undefined
             },
+            expenseStatus: expenseStatus == "ACTIVE" || "INACTIVE" ? expenseStatus : undefined,
+        };
+
+        if (groupId === null || groupId === undefined) {
+            where.OR = [
+                { createdBy: userId },
+                { expenseShares: { some: { userId: userId } } }
+            ]
+        }
+        //the ones the current user is part of.
+        const expenses = await prisma.expenses.findMany({
+            where: where,
             include: {
                 expenseShares: true
             },
@@ -86,6 +95,7 @@ export async function getExpenses(req: Request, res: Response) {
         }));
     } catch (err) {
         //TODO: check if there's better way to handle these errors.
-        throw new ExpenseError("ERROR_FETCHING_EXPENSES", null);
+        // throw new ExpenseError("ERROR_FETCHING_EXPENSES", null);
+        res.send(err);
     }
 }
