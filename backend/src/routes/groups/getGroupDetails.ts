@@ -74,7 +74,7 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             let groupDetailsResponse: any = groupDetails;
             type GroupMemberMap = {
                 [memberId: number]: {
-                userFullName: string;
+                firstname: string;
                 profilePic: string;
                 };
             };
