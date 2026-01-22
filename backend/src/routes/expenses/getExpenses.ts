@@ -5,6 +5,7 @@ import { ExpenseError, ExpenseErrorObject } from '../../interfaces/ErrorHandlers
 import { prisma } from "../../db/connectDB.js";
 import { parseObject } from '../../utils/commonUtil.js';
 import { z } from "zod";
+import { Prisma } from '@prisma/client';
 
 //zod schema for expense query parameters
 export const ExpenseQuerySchema = z.object({
@@ -54,7 +55,7 @@ export async function getExpenses(req: Request, res: Response) {
             throw new ExpenseError("USER_NOT_IN_GROUP", null);
         }
 
-        let where: any = {
+        let where: Prisma.ExpensesWhereInput = {
             groupId: groupId,
             expenseName: searchExpenseName ? { contains: searchExpenseName, mode: 'insensitive' } : undefined,
             description: searchExpenseDescription ? { contains: searchExpenseDescription, mode: 'insensitive' } : undefined,
