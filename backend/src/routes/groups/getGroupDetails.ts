@@ -45,17 +45,6 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             const groupDetails = await prisma.groups.findUnique({
                 relationLoadStrategy: 'join',
                 include: {
-                    expenses: {
-                        where: { expenseStatus: "ACTIVE" },
-                        include: {
-                            expenseShares: {
-                                include: { fk_user: true},
-                                omit: {
-                                    expenseId: true,
-                                }
-                            }
-                        }
-                    },
                     groupMembers: {
                         include: {
                             fk_member: true
@@ -89,21 +78,6 @@ export async function getGroupDetails(req: Request, res: Response, next: NextFun
             groupDetailsResponse.groupMembers = groupMembers;
 
             //adding userFullName in the expenseShares object, and removing the fk_user foreign object
-
-            for (const expense of groupDetailsResponse.expenses) {
-                let modifiedExpense: any = expense;
-                const paidBy = [];
-                let userSumAmount = 0;
-
-                for(let expenseShare of expense.expenseShares) {
-                    delete expenseShare.fk_user;
-                    if (expenseShare.paidAmount > 0) paidBy.push(expenseShare.userId)
-                    if (expenseShare.userId == userId) userSumAmount = expenseShare.paidAmount - expenseShare.owedAmount;
-                }
-
-                modifiedExpense.userSumAmount = userSumAmount;
-                modifiedExpense.paidBy = paidBy;
-            }
 
             res.send(parseObject(groupDetailsResponse));
         }
